@@ -6,8 +6,7 @@ function App() {
   return(
     <div className='app'>
       <div className="searchbar">
-        <div>Searchbar</div>
-        <div>Search Results</div>
+        <Searchbar/>
       </div>
     </div>
   );
