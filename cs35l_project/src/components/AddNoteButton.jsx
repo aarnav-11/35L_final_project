@@ -1,27 +1,23 @@
 
 import React, {useState} from "react";
-import "./AddNoteButton.css"
+import "./AddNoteButton.css";
 
-
-function AddNoteButton(){
-    const [notes, setNotes] = useState([]);
+function AddNoteButton({ onAddNote }){
     const [newNoteText, setNewNoteText] = useState("");
     const [isEditorOpen, setIsEditorOpen] = useState(false);
 
     const handleInputChange = (event) => {
         setNewNoteText(event.target.value);
     };
-    const addNote = () => {
-        if (newNoteText.trim() !== '') { // Prevent adding empty notes
-            const newNote = {
-                id: Date.now(), // Unique ID for the note
-                text: newNoteText,
-            };
-            setNotes([...notes, newNote]);
+    
+    const handleSave = () => {
+        if (newNoteText.trim() !== '') {
+            onAddNote(newNoteText); // Call the function passed from App
             setNewNoteText(''); // Clear the input field
             setIsEditorOpen(false);
         }
     };
+
     return(
         <div className="addnote-wrapper">
         {!isEditorOpen && (
@@ -29,7 +25,7 @@ function AddNoteButton(){
             +
           </button>
         )}
-    
+
         {isEditorOpen && (
           <div className="note-editor">
             <textarea
@@ -37,11 +33,10 @@ function AddNoteButton(){
               onChange={handleInputChange}
               placeholder="Add a new note..."
             />
-            <button className= "save-button" onClick={addNote} >Save</button>
+            <button className="save-button" onClick={handleSave}>Save</button>
             <button className="cross-button" onClick={() => setIsEditorOpen(false)}>x</button>
           </div>
         )}
-
       </div>
     );
 }
