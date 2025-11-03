@@ -40,16 +40,6 @@
     justify-content: center;
     z-index: 1000;
 }
-  
-.note-editor textarea {
-    width: 80%;
-    height: 60vh;
-    font-size: 16px;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    resize: none;
-}
 
 .cross-button{
     position: fixed;
@@ -72,4 +62,23 @@
     width: 1200px;
     border-radius: 10px;
     font-weight: bold;
+}
+
+.note-content{
+    height: 40vh;
+    width: 80%;
+    font-size: 16px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: none;
+}
+
+.note-title{
+    height: 10vh;
+    width: 80%;font-size: 16px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: none;
 }

@@ -5,15 +5,20 @@ import "./AddNoteButton.css";
 function AddNoteButton({ onAddNote }){
     const [newNoteText, setNewNoteText] = useState("");
     const [isEditorOpen, setIsEditorOpen] = useState(false);
+    const [addTitle, setAddTitle] = useState("");
 
-    const handleInputChange = (event) => {
+    const handleTextChange = (event) => {
         setNewNoteText(event.target.value);
+    };
+    const handleTitleChange = (event) => {
+        setAddTitle(event.target.value);
     };
     
     const handleSave = () => {
         if (newNoteText.trim() !== '') {
-            onAddNote(newNoteText); // Call the function passed from App
+            onAddNote(addTitle, newNoteText); // Call the function passed from App
             setNewNoteText(''); // Clear the input field
+            setAddTitle(''); // Clear the title input field
             setIsEditorOpen(false);
         }
     };
@@ -27,10 +32,16 @@ function AddNoteButton({ onAddNote }){
         )}
 
         {isEditorOpen && (
+          
           <div className="note-editor">
-            <textarea
+            <textarea className="note-title"
+              value={addTitle}
+              onChange={handleTitleChange}
+              placeholder="Add a title..."
+            />
+            <textarea className="note-content"
               value={newNoteText}
-              onChange={handleInputChange}
+              onChange={handleTextChange}
               placeholder="Add a new note..."
             />
             <button className="save-button" onClick={handleSave}>Save</button>

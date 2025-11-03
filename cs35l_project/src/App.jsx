@@ -8,11 +8,11 @@ import Note from "./components/Note"
 function App() {
   const [notes, setNotes] = useState([]);
 
-  const addNote = (noteText) => {
+  const addNote = (title, noteText) => {
     if (noteText.trim() !== '') {
       const newNote = {
         id: Date.now(),
-        title: "Untitled Thought",
+        title: title,
         text: noteText,
       };
       setNotes([newNote, ...notes]);
