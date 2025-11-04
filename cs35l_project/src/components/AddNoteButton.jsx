@@ -11,6 +11,10 @@ function AddNoteButton({ onAddNote }){
         setNewNoteText(event.target.value);
     };
     const handleTitleChange = (event) => {
+      if (event.target.value.length >= 100) {
+          alert("Title is too long. Please enter a shorter title.");
+          return;
+      }
         setAddTitle(event.target.value);
     };
     
@@ -18,6 +22,7 @@ function AddNoteButton({ onAddNote }){
         if (newNoteText.trim() !== '') {
             onAddNote(addTitle, newNoteText); // Call the function passed from App
             setNewNoteText(''); // Clear the input field
+            
             setAddTitle(''); // Clear the title input field
             setIsEditorOpen(false);
         }
