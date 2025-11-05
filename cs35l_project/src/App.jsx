@@ -59,7 +59,21 @@ function App() {
       alert(`Failed to add note, please try again`);
     }
   }
-  
+
+  // replace removeNote with this version
+  const removeNote = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
+
+      if (!res.ok) throw new Error(`Failed to delete note (${res.status})`);
+      // if server returns 204, there’s no body to parse — skip res.json()
+      setNotes(prev => prev.filter(n => n.id !== id));
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete note, please try again');
+    }
+  };
+
   const q = searchQuery.toLowerCase();
   const filteredNotes = q
     ? notes.filter(n =>
@@ -76,7 +90,7 @@ function App() {
       </div>
       <div className='notes-grid'>
         {filteredNotes.map((note) => (
-          <Note key={note.id} note={note} />
+          <Note key={note.id} note={note} onRemoveNote={() => removeNote(note.id)} />
         ))}
       </div>
     </div>

@@ -19,6 +19,10 @@ function AddNoteButton({ onAddNote }){
     };
     
     const handleSave = () => {
+        if (newNoteText.trim() === '') {
+            alert("Note text cannot be empty");
+            return;
+        }
         if (newNoteText.trim() !== '') {
             onAddNote(addTitle, newNoteText); // Call the function passed from App
             setNewNoteText(''); // Clear the input field
