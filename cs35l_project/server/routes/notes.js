@@ -7,11 +7,34 @@ router.get('/', (req, res) => {
     const query = 'SELECT * FROM notes ORDER BY created_at DESC';
     db.all(query, (err, rows) => {
         if (err){
-            res.sendStatus(500).send(err.message);
+            res.status(500).send(err.message);
             return;
         } 
         res.json(rows);
     }); 
+});
+
+router.post('/', (req,res)=>{
+    const {title, text} = req.body;
+    if (text.trim() === ""){
+        res.status(400).send("Note text cannot be empty");
+        return;
+    }
+    //insert the note into the database
+    const query = 'INSERT INTO notes (title, text) VALUES (?, ?)';
+    db.run(query, [title || "Untitled Thought", text], function(err){
+        if (err){
+            res.status(500).send(err.message);
+            return;
+        }
+        res.status(201).json({
+            id: this.lastID,
+            title: title || "Untitled Thought",
+            text: text,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        })
+    });
 });
 
 module.exports = router;
