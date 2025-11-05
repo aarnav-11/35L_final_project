@@ -4,14 +4,14 @@ import './App.css'
 import Searchbar from './components/Searchbar'
 import AddNoteButton from "./components/AddNoteButton"
 import Note from "./components/Note"
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const API_BASE_URL = "http://localhost:3000/notes";
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const [searchQuery, setSearchQuery] = useState("");
   //fetch notes from db
   const fetchNotes = async () => {
     try{
@@ -60,14 +60,22 @@ function App() {
     }
   }
   
+  const q = searchQuery.toLowerCase();
+  const filteredNotes = q
+    ? notes.filter(n =>
+        (n.title && n.title.toLowerCase().includes(q)) ||
+        (n.text && n.text.toLowerCase().includes(q))
+      )
+    : notes;
+
   return(
     <div className='app'>
       <div className="header-container">
-        <Searchbar/>
+        <Searchbar value={searchQuery} onChange={setSearchQuery} />
         <AddNoteButton onAddNote={addNote} />
       </div>
       <div className='notes-grid'>
-        {notes.map((note) => (
+        {filteredNotes.map((note) => (
           <Note key={note.id} note={note} />
         ))}
       </div>
