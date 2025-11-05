@@ -37,4 +37,17 @@ router.post('/', (req,res)=>{
     });
 });
 
+router.delete("/:id", (req, res) => {
+    const { id } = req.params;
+    const query = 'DELETE FROM notes WHERE id = ?';
+    db.run(query, [id], function(err){
+        if (err){
+            res.status(500).send(err.message);
+            return;
+        }
+        res.status(204).send();
+        console.log(`Note with id ${id} deleted`);
+    });
+});
+
 module.exports = router;

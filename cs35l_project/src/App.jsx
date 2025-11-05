@@ -4,14 +4,14 @@ import './App.css'
 import Searchbar from './components/Searchbar'
 import AddNoteButton from "./components/AddNoteButton"
 import Note from "./components/Note"
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const API_BASE_URL = "http://localhost:3000/notes";
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const [searchQuery, setSearchQuery] = useState("");
   //fetch notes from db
   const fetchNotes = async () => {
     try{
@@ -59,16 +59,38 @@ function App() {
       alert(`Failed to add note, please try again`);
     }
   }
-  
+
+  // replace removeNote with this version
+  const removeNote = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
+
+      if (!res.ok) throw new Error(`Failed to delete note (${res.status})`);
+      // if server returns 204, there’s no body to parse — skip res.json()
+      setNotes(prev => prev.filter(n => n.id !== id));
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete note, please try again');
+    }
+  };
+
+  const q = searchQuery.toLowerCase();
+  const filteredNotes = q
+    ? notes.filter(n =>
+        (n.title && n.title.toLowerCase().includes(q)) ||
+        (n.text && n.text.toLowerCase().includes(q))
+      )
+    : notes;
+
   return(
     <div className='app'>
       <div className="header-container">
-        <Searchbar/>
+        <Searchbar value={searchQuery} onChange={setSearchQuery} />
         <AddNoteButton onAddNote={addNote} />
       </div>
       <div className='notes-grid'>
-        {notes.map((note) => (
-          <Note key={note.id} note={note} />
+        {filteredNotes.map((note) => (
+          <Note key={note.id} note={note} onRemoveNote={() => removeNote(note.id)} />
         ))}
       </div>
     </div>

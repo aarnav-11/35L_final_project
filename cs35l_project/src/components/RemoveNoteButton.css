@@ -1,0 +1,9 @@
+.remove-note-button{
+    background-color: orange;
+    color: white;
+    border: none;
+    height: 25px;
+    width: 25px;
+    border-radius: 100%;
+    font-weight: bolder;
+}
