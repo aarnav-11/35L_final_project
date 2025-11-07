@@ -2,7 +2,6 @@
     font-size: 1.6cap;
     justify-content: center;
     justify-items: center;
-    text-decoration-color: orange;
     padding-bottom: 0.5%;
     display: flex;
     gap: 1rem;
@@ -12,5 +11,17 @@
 
 .navigation a{
     text-decoration: none;
-    color: black;
+    color: rgb(93, 90, 90);
+}
+
+.home:hover{
+    transform: translateY(-1px);
+}
+
+.about:hover{
+    transform: translateY(-1px);
+}
+
+.contact:hover{
+    transform: translateY(-1px);
 }
