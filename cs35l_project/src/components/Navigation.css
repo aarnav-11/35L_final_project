@@ -1,0 +1,16 @@
+.navigation{
+    font-size: 1.6cap;
+    justify-content: center;
+    justify-items: center;
+    text-decoration-color: orange;
+    padding-bottom: 0.5%;
+    display: flex;
+    gap: 1rem;
+    text-decoration: none;
+    background-color: white;
+}
+
+.navigation a{
+    text-decoration: none;
+    color: black;
+}
