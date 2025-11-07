@@ -24,10 +24,10 @@ function AddNoteButton({ onAddNote }){
             return;
         }
         if (newNoteText.trim() !== '') {
-            onAddNote(addTitle, newNoteText); // Call the function passed from App
-            setNewNoteText(''); // Clear the input field
+            onAddNote(addTitle, newNoteText); // call the function passed from app
+            setNewNoteText(''); // clear the input field
             
-            setAddTitle(''); // Clear the title input field
+            setAddTitle(''); // clear the title input field
             setIsEditorOpen(false);
         }
     };

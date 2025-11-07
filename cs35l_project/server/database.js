@@ -29,9 +29,9 @@ function initializeDatabase() {
 
     db.run(createTableQuery, (err) => {
         if (err) {
-            console.error('Error creating table:', err.message);
+            console.error("table didnt make", err.message);
         } else {
-            console.log('Notes table ready');
+            console.log('table ready');
         }
     });
 }

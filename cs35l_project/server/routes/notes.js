@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
     }); 
 });
 
+//method to post notes
 router.post('/', (req,res)=>{
     const {title, text} = req.body;
     if (text.trim() === ""){
@@ -37,6 +38,7 @@ router.post('/', (req,res)=>{
     });
 });
 
+//method to delete notes
 router.delete("/:id", (req, res) => {
     const { id } = req.params;
     const query = 'DELETE FROM notes WHERE id = ?';

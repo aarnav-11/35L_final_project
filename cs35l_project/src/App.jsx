@@ -17,17 +17,20 @@ function App() {
     try{
       setLoading(true);
       const response = await fetch(API_BASE_URL);
+      
       if (!response.ok){
         throw new Error('Failed to fetch notes');
       }
+
       const data = await response.json();
       setNotes(data);
       setLoading(false);
+
     } catch (err) {
       setError(err.message);
       setLoading(false);
     }
-    }
+  }
 
     useEffect(() => {
       fetchNotes();
@@ -60,13 +63,12 @@ function App() {
     }
   }
 
-  // replace removeNote with this version
   const removeNote = async (id) => {
     try {
       const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
 
       if (!res.ok) throw new Error(`Failed to delete note (${res.status})`);
-      // if server returns 204, there’s no body to parse — skip res.json()
+      // if server returns 204, there’s no body to parse then skip res.json()
       setNotes(prev => prev.filter(n => n.id !== id));
     } catch (err) {
       console.error(err);
