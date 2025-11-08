@@ -20,12 +20,28 @@
     padding-top: 20px;
 }
 
-.username{
+.authBody input {
     border: solid black 1px;
     background-color: white;
+    padding: 1%;
+    width: 300px;
+}
 
+.signButtons{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+/* .username{
+    border: solid black 1px;
+    background-color: white;
+    padding: 2%;
+    width: 300px;
 }
 .password{
     border: solid black 1px;
-}
-
+    background-color: white;
+    padding: 2%;
+    width: 300px;
+} */

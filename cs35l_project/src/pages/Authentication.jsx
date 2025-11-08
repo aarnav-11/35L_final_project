@@ -12,15 +12,26 @@ function Authentication(){
             </div>
             <div className="authBody"> 
                 <div>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" className="username"></input>
+                    <label for="name"><h3>Name:</h3></label>
+                    <input type="text" id="name" name="name" placeholder= "Enter your name" className="name"></input>
                 </div>
                 <div>
-                    <label for="password">Password:</label>
-                    <input type="text" id="password" name="password" className="password"></input>
+                    <label for="age"><h3>Age:</h3></label>
+                    <input type="text" id="age" name="age" placeholder= "Enter your age" className="age"></input>
+                </div>
+                <div>
+                    <label for="username"><h3>Username:</h3></label>
+                    <input type="text" id="username" name="username" placeholder= "Enter your username" className="username"></input>
+                </div>
+                <div>
+                    <label for="password"><h3>Password:</h3></label>
+                    <input type="text" id="password" name="password" placeholder="Enter your password" className="password"></input>
                 </div>
             </div>
-            <button onClick={ () => navigate("/home")}>Sign Up</button>
+            <div className="signButtons">
+                <button onClick={ () => navigate("/home")}>Sign Up</button>
+                <button onClick={ () => navigate("/home")}>Log in</button>
+            </div>
         </div>
     );
 }

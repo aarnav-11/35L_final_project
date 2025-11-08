@@ -25,3 +25,14 @@
   break-inside: avoid; /* helps with experimental masonry grid */
   word-wrap: break-word;
 }
+
+.note-card h1 {
+  color: #000 !important; /* Force the color */
+  margin: 0;
+  font-weight: bold;
+}
+
+.note-card p {
+  color: #000 !important; /* Force the color */
+  margin: 0;
+}
