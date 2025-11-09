@@ -1,9 +1,9 @@
 
+require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const db = require('./database');
 const notesRoutes = require('./routes/notes');
-
 const app = express();
 
 //Middleware
