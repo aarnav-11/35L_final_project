@@ -1,0 +1,91 @@
+
+*{
+    background-color: #FDFBF8;
+}
+h1{
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: black;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 8px whitesmoke;
+}
+
+.mainMainBox{
+    padding-left: 35%;
+    padding-top: 30px;
+}
+.mainBox{
+    width: 450px;
+    height: 700px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+
+.auth{
+    padding-top: 2%;
+}
+.authBody{
+    padding-top: 0px;
+}
+
+.authBody input {
+    border: solid black 1px;
+    background-color: white;
+    padding: 1%;
+    width: 300px;
+}
+
+.signButtons{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-top: 30px;
+}
+
+.forgotPass{
+    padding-top: 20px;
+}
+
+.signButton{
+    background: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px grey;
+}
+.signButton:hover{
+    background: whitesmoke;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px grey;
+}
+.forgotPass button{
+    background-color: none;
+    border: none;
+    font-family:'Times New Roman', Times, serif;
+    font-size: medium;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+/* .username{
+    border: solid black 1px;
+    background-color: white;
+    padding: 2%;
+    width: 300px;
+}
+.password{
+    border: solid black 1px;
+    background-color: white;
+    padding: 2%;
+    width: 300px;
+} */

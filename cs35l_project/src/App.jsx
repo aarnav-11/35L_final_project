@@ -1,7 +1,7 @@
 
 import MainPage from './pages/MainPage';
 import ErrorPage from './pages/404page';
-import Authentication from "./pages/Authentication"
+import Authentication from "./pages/LoginSignup/Authentication"
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
