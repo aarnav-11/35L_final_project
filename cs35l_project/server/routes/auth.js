@@ -1,0 +1,106 @@
+
+const express = require("express");
+const router = express.Router();
+const db = require("../database");
+
+/*
+When a user submits their login details we need to write a post request to the db to store them
+then we need to verify using get requests to the db
+
+1. Post request into db for signup
+    - Get all credentials that user entered
+    - Check if they are all full
+    - Check if they fulfil requirements (maybe regex?)
+    - Check if user already exists in the DB (if yes redirect to log in page with error message)
+    - Insert user into db
+    - Generate access and refresh tokens
+    - Store refresh token in db
+    - set cookies (i have no idea how to do this)
+    return {sucess: true, user: {name, id, email}}
+    error handling: 400 for operation failed, 409 conflict for duplicate, 500 for internal server errors
+*/
+function passwordCheck(password){
+    if (password.length < 8){
+        return "Password should be at least 8 characters"
+    }
+    if (password.includes(" ")){
+        return "Password should not contain spaces"
+    }
+    if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password))) {
+        return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    }
+    return true;
+}
+
+router.post('/', (req, res) => {
+    const {name, age, favProf, email, password} = req.body;
+    if(name.trim() === ""){
+        return res.status(400).send("Your name cannot be empty");
+    }
+    if(age.trim() === ""){
+        return res.status(400).send("Your age cannot be empty");
+    }
+    if(favProf.trim() === ""){
+        return res.status(400).send("Your security question cannot be empty");
+    }
+    if(email.trim() === ""){
+        return res.status(400).send("Your email cannot be empty");
+    }
+    if(password.trim() === ""){
+        return res.status(400).send("Your password cannot be empty");
+    }
+
+    const ageNum = Number(age.trim());
+    if (isNaN(Number(age))) {
+        return res.status(400).send("Age must be a number");
+    }
+    if (age.trim() <= 8 || age.trim() >= 100){
+        return res.status(400).send("Please enter a valid age(9-99)");
+    }
+
+    if (!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email)){
+        return res.status(400).send("Please enter a valid email address")
+    }
+
+    const passwordResult = passwordCheck(password);
+    if (passwordResult !== true){
+        return res.status(400).send(passwordResult);
+    }
+
+    //check if user already exists in the database
+    const query = 'SELECT * FROM users WHERE email = ?';
+    db.get(query, [email], function(err, row){
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        if (row){
+            return res.status(409).send("User already exists please log in instead");
+        }
+        //insert user into the database
+        const insertQuery = 'INSERT INTO users (name, age, favProf, email, password) VALUES (?, ?, ?, ?, ?)';
+        db.run(insertQuery, [name, ageNum, favProf, email, password], function(err){
+            if (err){
+                return res.status(500).send(err.message);
+            }
+        });
+        return res.status(201).sendjson({
+            success: true,
+            user: {
+                name: name,
+                age: ageNum,
+                favProf: favProf,
+                email: email
+            }
+        });
+    });
+    
+    //generate access and refresh tokens
+    const accessToken = generateAccessToken(this.lastID, email);
+    const refreshToken = generateRefreshToken(this.lastID);
+    storeRefreshToken(this.lastID, refreshToken);
+    setCookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+    setCookie("refreshToken", refreshToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+    return res.status(201).send("User created successfully");
+});
+
+module.exports = router;

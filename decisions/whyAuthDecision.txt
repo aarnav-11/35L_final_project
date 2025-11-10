@@ -298,4 +298,3 @@ This architecture balances security, scalability, and user experience for a mode
 - RFC 7519 (JSON Web Token)
 - Axios Documentation
 - React Router Authentication Guide
-
