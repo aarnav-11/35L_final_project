@@ -24,12 +24,16 @@ function Authentication(){
                             <label for="age"><h3>Age:</h3></label>
                             <input type="text" id="age" name="age" placeholder= "Enter your age" className="age"></input>
                         </div>
+                        <div>
+                            <label for="favProf"><h3>Favorite Professor:</h3></label>
+                            <input type="text" id="favProf" name="favProf" placeholder= "Enter your favorite professor" className="favProf"></input>
+                        </div>
                     </div>
                     }
 
                     <div>
-                        <label for="username"><h3>Username:</h3></label>
-                        <input type="text" id="username" name="username" placeholder= "Enter your username" className="username"></input>
+                        <label for="email"><h3>Email:</h3></label>
+                        <input type="text" id="email" name="email" placeholder= "Enter your email" className="email"></input>
                     </div>
                     <div>
                         <label for="password"><h3>Password:</h3></label>
