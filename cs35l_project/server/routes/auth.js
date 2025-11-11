@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../database");
 const { generateAccessToken, generateRefreshToken, storeRefreshToken, verifyToken, deleteRefreshToken, deleteRefreshTokensByUserId } = require("../utils/jwt");
+const { requireAuth } = require("../middleware/auth");
 
 /*
 When a user submits their login details we need to write a post request to the db to store them
