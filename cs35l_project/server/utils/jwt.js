@@ -31,11 +31,13 @@ function storeRefreshToken(userId, token) {
         }
     });
 }
-function deleteAccessToken(token) {
-    const query = "DELETE FROM accesstokens WHERE token = ?";
-    db.run(query, [token], function(err){
+
+//I realized access tokens are stateless so we don't need to delete them
+function deleteRefreshTokensByUserId(userId) {
+    const query = "DELETE FROM refreshtokens WHERE user_id = ?";
+    db.run(query, [userId], function(err){
         if (err){
-            console.log(err.message);
+            console.log('Error deleting refresh tokens:', err.message);
         }
     });
 }
@@ -55,7 +57,7 @@ module.exports = {
     verifyToken,
     storeRefreshToken,
     deleteRefreshToken,
-    deleteAccessToken
+    deleteRefreshTokensByUserId
 }
 
 

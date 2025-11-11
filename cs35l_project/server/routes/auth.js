@@ -2,8 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database");
-const { generateAccessToken, generateRefreshToken, storeRefreshToken, deleteRefreshToken, deleteAccessToken} = require("../utils/jwt");
-
+const { generateAccessToken, generateRefreshToken, storeRefreshToken, verifyToken, deleteRefreshToken, deleteRefreshTokensByUserId } = require("../utils/jwt");
 /*
 When a user submits their login details we need to write a post request to the db to store them
 then we need to verify using get requests to the db
@@ -149,8 +148,7 @@ router.post("/login", (req, res) => {
                 if (row.password === password){
                     const accessToken = generateAccessToken(row.id, email);
                     const refreshToken = generateRefreshToken(row.id);
-                    deleteRefreshToken(row.id);
-                    deleteAccessToken(row.id);
+                    deleteRefreshTokensByUserId(row.id);
                     storeRefreshToken(row.id, refreshToken);
                     res.cookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
                     res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true, maxAge: 3600000 });
@@ -165,7 +163,6 @@ router.post("/login", (req, res) => {
 });
 
 //get method to display the db
-
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM users';
     db.all(query, (err, rows) => {
@@ -175,5 +172,54 @@ router.get('/', (req, res) => {
         return res.status(200).json(rows);
     });
 })
+
+/*
+4. Post method for refresh
+    - Get refresh token from the cookies (req.cookies.reftoken)
+    - if refresh token not there return error (prolly 401)
+    - Verify the token (jwt.verify)
+    - check if token exists in db 
+    - check if token has expired 
+    - if invalid/expired then return error and delete from db
+    - generate a new access token 
+    - set new accesstoken cookie 
+    -return a success
+*/
+
+router.post("/refresh", (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+        return res.status(401).send("Refresh token not found");
+    }
+
+    const decoded = verifyToken(refreshToken);
+    if (!decoded || decoded.type !== 'refresh') {
+        return res.status(401).send("Invalid refresh token");
+    }
+
+    const tokenExistsQuery = 'SELECT * FROM refreshtokens WHERE token = ?';
+    db.get(tokenExistsQuery, [refreshToken], function(err, row){
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        if (!row) {
+            return res.status(401).send("Refresh token not found");
+        }
+
+        const now = new Date();
+        const expiresAt = new Date(row.expires_at);
+        if (expiresAt <= now) {
+            deleteRefreshToken(refreshToken);
+            return res.status(401).send("Refresh token expired");
+        }
+
+        // Generate new access token and set cookie
+        const newAccessToken = generateAccessToken(decoded.userId, decoded.email);
+        res.cookie("accessToken", newAccessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+
+        return res.status(200).json({ success: true, accessToken: newAccessToken });
+    });
+})
+
 
 module.exports = router;
