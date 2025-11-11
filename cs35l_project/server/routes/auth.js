@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../database");
 const { generateAccessToken, generateRefreshToken, storeRefreshToken, verifyToken, deleteRefreshToken, deleteRefreshTokensByUserId } = require("../utils/jwt");
+
 /*
 When a user submits their login details we need to write a post request to the db to store them
 then we need to verify using get requests to the db
@@ -246,5 +247,36 @@ router.post("/logout", (req,res) => {
     }
 })
 
+/* Who am I endpoint
+6. Get method to check who is logged in using the access token cookie
+    - Get accessToken from cookies
+    -  verify token
+    - extract userId from token
+    - Fetch user from database
+    - return user details
+    -if invalid return 401
+*/
+
+router.get("/me", (req, res) => {
+    const accessToken = req.cookies.accessToken;
+    if (!verifyToken(accessToken)){
+        return res.status(401).send("Invalid access token");
+    }
+    const userID = verifyToken(accessToken).userId;
+    const userQuery = 'SELECT * FROM users WHERE id = ?';
+    db.get(userQuery, [userID], function(err, row){
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        return res.status(200).json({
+            success: true,
+            user: {
+                id: row.id,
+                name: row.name,
+                email: row.email
+            }
+        });
+    });
+})
 
 module.exports = router;

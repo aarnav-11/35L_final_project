@@ -1,0 +1,2 @@
+
+used AI to generate the SQL queries and a little help for the db operations, creating tables etc.
