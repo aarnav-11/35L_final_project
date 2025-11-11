@@ -31,6 +31,14 @@ function storeRefreshToken(userId, token) {
         }
     });
 }
+function deleteAccessToken(token) {
+    const query = "DELETE FROM accesstokens WHERE token = ?";
+    db.run(query, [token], function(err){
+        if (err){
+            console.log(err.message);
+        }
+    });
+}
 
 function deleteRefreshToken(token) {
     const query = "DELETE FROM refreshtokens WHERE token = ?";
@@ -46,7 +54,8 @@ module.exports = {
     generateRefreshToken,
     verifyToken,
     storeRefreshToken,
-    deleteRefreshToken
+    deleteRefreshToken,
+    deleteAccessToken
 }
 
 

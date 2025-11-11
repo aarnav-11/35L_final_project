@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database");
-const { generateAccessToken, generateRefreshToken, storeRefreshToken, deleteRefreshToken } = require("../utils/jwt");
+const { generateAccessToken, generateRefreshToken, storeRefreshToken, deleteRefreshToken, deleteAccessToken} = require("../utils/jwt");
 
 /*
 When a user submits their login details we need to write a post request to the db to store them
@@ -139,7 +139,7 @@ router.post("/login", (req, res) => {
             return res.status(401).send("Email not found, please sign up instead")
         }
         if (row){
-            db.get(passwordQuery, [email], function(err,row){
+            db.get(emailQuery, [email], function(err,row){
                 if (err){
                     return res.status(500).send(err.message);
                 }
