@@ -6,6 +6,8 @@ import AddNoteButton from "../components/AddNoteButton"
 import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
+import UploadNotesButton from "../components/UploadNotesButton";
+
 
 const API_BASE_URL = "http://localhost:3000/notes";
 
@@ -94,6 +96,7 @@ function MainPage() {
       <div className="header-container">
         <Searchbar value={searchQuery} onChange={setSearchQuery} />
         <AddNoteButton onAddNote={addNote} />
+        <UploadNotesButton onUpload={(newNote) => setNotes([newNote, ...notes])} />
       </div>
       <div className='notes-grid'>
         {filteredNotes.map((note) => (
