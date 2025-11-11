@@ -221,5 +221,30 @@ router.post("/refresh", (req, res) => {
     });
 })
 
+/*
+5. Logout- post request.
+    - Get refreshToken from cookies
+    - If token exists, delete from database
+    - Clear both cookies:
+        -res.clearCookie('accessToken')
+        - res.clearCookie('refreshToken')
+    - Return sauccess
+*/
+
+router.post("/logout", (req,res) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken){
+        const deleteTokenQuery = "DELETE FROM refreshtokens WHERE token = ?";
+        db.run(deleteTokenQuery, [refreshToken], function(err){
+            if (err){
+                return res.status(500).send(err.message);
+            }
+        });
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        return res.status(200).json({ success: true, message: "Logged out successfully" });
+    }
+})
+
 
 module.exports = router;

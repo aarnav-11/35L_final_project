@@ -7,7 +7,7 @@ import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
 
-const API_BASE_URL = "http://localhost:3000/notes";
+const API_BASE_URL = "http://localhost:3000/api/notes";
 
 function MainPage() {
   const [notes, setNotes] = useState([]);
