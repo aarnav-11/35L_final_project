@@ -1,11 +1,14 @@
 
+const jwt = require('jsonwebtoken');
+const db = require('../database');
+
 function generateAccessToken(userId, email) {
-    jwt.sign({ userId, email }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_ACCESS_EXPIRY });
+    const token = jwt.sign({ userId, email }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_ACCESS_EXPIRY });
     return token;
 }
 
 function generateRefreshToken(userId) {
-    jwt.sign({ userId, type: refresh}, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_REFRESH_EXPIRY });
+    const token = jwt.sign({ userId, type: "refresh"}, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_REFRESH_EXPIRY });
     return token;
 }
 
@@ -14,13 +17,15 @@ function verifyToken(token) {
         return jwt.verify(token, process.env.JWT_SECRET_KEY);
     } catch (error) {
         console.log(error.message);
+        return null;
     }
 }
 
 function storeRefreshToken(userId, token) {
-    const expires_at = new Date(Date.now() + process.env.JWT_REFRESH_EXPIRY);
+    const expires_at = new Date();
+    expires_at.setDate(expires_at.getDate() + 7); //expires in 7 days
     const query = 'INSERT INTO refreshtokens (user_id, token, expires_at) VALUES (?, ?, ?)';
-    db.run(query, [userId, token, expires_at], function(err){
+    db.run(query, [userId, token, expires_at.toISOString()], function(err){
         if (err){
             console.log(err.message);
         }

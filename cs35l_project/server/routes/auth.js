@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database");
+const { generateAccessToken, generateRefreshToken, storeRefreshToken } = require("../utils/jwt");
 
 /*
 When a user submits their login details we need to write a post request to the db to store them
@@ -76,31 +77,40 @@ router.post('/', (req, res) => {
         if (row){
             return res.status(409).send("User already exists please log in instead");
         }
+
         //insert user into the database
         const insertQuery = 'INSERT INTO users (name, age, favProf, email, password) VALUES (?, ?, ?, ?, ?)';
         db.run(insertQuery, [name, ageNum, favProf, email, password], function(err){
             if (err){
                 return res.status(500).send(err.message);
             }
-        });
-        return res.status(201).sendjson({
-            success: true,
-            user: {
-                name: name,
-                age: ageNum,
-                favProf: favProf,
-                email: email
-            }
+
+            const userId = this.lastID;
+
+            //generate access and refresh tokens
+            const accessToken = generateAccessToken(userId, email);
+            const refreshToken = generateRefreshToken(userId);
+
+            //store refresh token in the database
+            storeRefreshToken(userId, refreshToken);
+
+            //set cookies
+
+            res.cookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+            res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+
+            return res.status(201).json({
+                sucess: true,
+                user: {
+                    id: userId,
+                    name: name,
+                    age: ageNum,
+                    favProf: favProf,
+                    email: email
+                }
+            });
         });
     });
-    
-    //generate access and refresh tokens
-    const accessToken = generateAccessToken(this.lastID, email);
-    const refreshToken = generateRefreshToken(this.lastID);
-    storeRefreshToken(this.lastID, refreshToken);
-    setCookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
-    setCookie("refreshToken", refreshToken, { httpOnly: true, secure: true, maxAge: 3600000 });
-    return res.status(201).send("User created successfully");
 });
 
 module.exports = router;

@@ -12,8 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 //Routes
-app.use('/notes', notesRoutes);
-app.use("/auth", authRoutes);
+app.use('/api/notes', notesRoutes);
+app.use("/api/auth", authRoutes);
 
 //Start the server
 const PORT = process.env.PORT || 3000;
