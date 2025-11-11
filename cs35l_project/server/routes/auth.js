@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../database");
-const { generateAccessToken, generateRefreshToken, storeRefreshToken } = require("../utils/jwt");
+const { generateAccessToken, generateRefreshToken, storeRefreshToken, deleteRefreshToken } = require("../utils/jwt");
 
 /*
 When a user submits their login details we need to write a post request to the db to store them
@@ -32,8 +32,11 @@ function passwordCheck(password){
     }
     return true;
 }
+//////////////////////////////////////////////////////////////////////
+////IMPORTANT: the password isnt hashed yet so we need to do that////
+//////////////////////////////////////////////////////////////////////
 
-router.post('/', (req, res) => {
+router.post('/signup', (req, res) => {
     const {name, age, favProf, email, password} = req.body;
     if(name.trim() === ""){
         return res.status(400).send("Your name cannot be empty");
@@ -69,8 +72,8 @@ router.post('/', (req, res) => {
     }
 
     //check if user already exists in the database
-    const query = 'SELECT * FROM users WHERE email = ?';
-    db.get(query, [email], function(err, row){
+    const emailQuery = 'SELECT * FROM users WHERE email = ?';
+    db.get(emailQuery, [email], function(err, row){
         if (err){
             return res.status(500).send(err.message);
         }
@@ -112,5 +115,65 @@ router.post('/', (req, res) => {
         });
     });
 });
+
+//log in post request
+
+/* 
+1. Get the email and password
+2. Check if the email exists in db if not prompt to sign up page
+3. If email does exist then check if password matches, if not send error code and point to reset password
+4. If password matches generate new refresh and access tokens for the user
+5. delete the old tokens (maybe 5 happens before 4)
+6. set cookies like in signup 
+7. return a success
+*/
+router.post("/login", (req, res) => {
+    const {email, password} = req.body;
+
+    const emailQuery = 'SELECT * FROM users WHERE email = ?';
+    db.get(emailQuery, [email], function(err, row){
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        if (!row){
+            return res.status(401).send("Email not found, please sign up instead")
+        }
+        if (row){
+            db.get(passwordQuery, [email], function(err,row){
+                if (err){
+                    return res.status(500).send(err.message);
+                }
+                if (row.password !== password){
+                    return res.status(401).send("Password doesn't match, try again or resetting it")
+                }
+                if (row.password === password){
+                    const accessToken = generateAccessToken(row.id, email);
+                    const refreshToken = generateRefreshToken(row.id);
+                    deleteRefreshToken(row.id);
+                    deleteAccessToken(row.id);
+                    storeRefreshToken(row.id, refreshToken);
+                    res.cookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+                    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+                    return res.status(200).json({
+                        success: true,
+                        message: "Login successful"
+                    });
+                }
+            });
+        }
+    });
+});
+
+//get method to display the db
+
+router.get('/', (req, res) => {
+    const query = 'SELECT * FROM users';
+    db.all(query, (err, rows) => {
+        if (err){
+            return res.status(500).send(err.message);
+        }
+        return res.status(200).json(rows);
+    });
+})
 
 module.exports = router;
