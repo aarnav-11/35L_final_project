@@ -1,4 +1,6 @@
 
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" }); // store PDFs temporarily
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
@@ -38,7 +40,28 @@ router.post('/', (req,res)=>{
         })
     });
 });
-
+// method to upload notes
+router.post("/upload", upload.single("file"), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+    const file = req.file;
+    // insert a new note into SQLite
+    const query = 'INSERT INTO notes (title, text) VALUES (?, ?)';
+    const title = file.originalname;
+    const text = "Uploaded PDF placeholder"; // later parse PDF???
+    db.run(query, [title, text], function(err){
+        if (err){
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.status(201).json({
+            id: this.lastID,
+            title,
+            text,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        });
+    });
+});
 //method to delete notes
 router.delete("/:id", (req, res) => {
     const { id } = req.params;

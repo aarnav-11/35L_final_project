@@ -1,57 +1,32 @@
 import React, { useState } from "react";
 
 const UploadNotesButton = ({ onUpload }) => {
-  const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    if (!file) return alert("Please select a file first!");
+  const handleUpload = () => {
     setUploading(true);
 
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
+    // simulate upload delay
+    setTimeout(() => {
+      const placeholderNote = {
+        id: Date.now(),
+        title: "Uploaded Note Placeholder",
+        text: "This is a placeholder note for testing.",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
 
-      // replace with your backend route later
-      const res = await fetch("http://localhost:3000/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) throw new Error("Failed to upload file");
-
-      const newNote = await res.json();
-      onUpload(newNote);
-
-      setFile(null);
-    } catch (err) {
-      console.error(err);
-      alert("Upload failed, please try again.");
-    } finally {
+      onUpload(placeholderNote); // add note to grid
       setUploading(false);
-    }
+      alert("Upload simulated! Placeholder note added.");
+    }, 500); // half-second delay to simulate upload
   };
 
   return (
     <div className="upload-notes-container">
-      <input
-        type="file"
-        accept="application/pdf"
-        onChange={handleFileChange}
-        id="file-upload"
-        style={{ display: "none" }}
-      />
-      <label htmlFor="file-upload" className="upload-label">
-        Choose PDF
-      </label>
-      <button onClick={handleUpload} disabled={!file || uploading}>
+      <button onClick={handleUpload} disabled={uploading}>
         {uploading ? "Uploading..." : "Upload"}
       </button>
-      {file && <p className="file-name">Selected: {file.name}</p>}
     </div>
   );
 };
