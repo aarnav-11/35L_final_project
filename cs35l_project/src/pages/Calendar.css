@@ -1,0 +1,25 @@
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .calendar-container h1 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .react-calendar {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .selected-date {
+    margin-top: 20px;
+    font-weight: 500;
+    color: #444;
+  }
