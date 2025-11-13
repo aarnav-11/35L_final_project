@@ -1,2 +1,4 @@
 
-used AI to generate the SQL queries and a little help for the db operations, creating tables etc.
+Aarnav: used AI to generate the SQL queries and a little help for the db operations, creating tables etc. The prompt was normally, I need a table which has ... and runs in this part of the code for a db.run/db.get etc.
+Aarnav: I used ai autocorrect for some of the endpoints, especially with error handling
+Aarnav: Since I did not have much of an understanding of how to develop a backend/middleware I asked ai to generate a plan for me, using cursor's plan feature.
