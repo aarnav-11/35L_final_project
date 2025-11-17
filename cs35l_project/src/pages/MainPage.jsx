@@ -3,6 +3,7 @@ import { useState } from 'react'
 import './MainPage.css'
 import Searchbar from '../components/Searchbar'
 import AddNoteButton from "../components/AddNoteButton"
+import UploadNoteButton from "../components/UploadNoteButton"
 import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
@@ -67,7 +68,7 @@ function MainPage() {
     }
   }
 
-  const removeNote = async (id) => {
+  const removeNote = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
 
@@ -77,6 +78,25 @@ function MainPage() {
     } catch (err) {
       console.error(err);
       alert('Failed to delete note, please try again');
+    }
+  };
+
+  const uploadNote = async () => {
+    try{
+      setLoading(true);
+      const response = await fetch(API_BASE_URL);
+      
+      if (!response.ok){
+        throw new Error('Failed to fetch notes');
+      }
+
+      const data = await response.json();
+      uploadNote(data);
+      setLoading(false);
+
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
     }
   };
 
@@ -96,7 +116,7 @@ function MainPage() {
       <div className="header-container">
         <Searchbar value={searchQuery} onChange={setSearchQuery} />
         <AddNoteButton onAddNote={addNote} />
-        <UploadNotesButton onUpload={(newNote) => setNotes([newNote, ...notes])} />
+        <UploadNoteButton onUploadNote={uploadNote} />
       </div>
       <div className='notes-grid'>
         {filteredNotes.map((note) => (
