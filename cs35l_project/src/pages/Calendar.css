@@ -1,70 +1,123 @@
-.calendar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .calendar-container h1 {
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .react-calendar {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  .selected-date {
-    margin-top: 20px;
-    font-weight: 500;
-    color: #444;
-  }
+.react-calendar {
+  width: 80vw;
+  max-width: 1000px;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  font-size: 1.1rem;
+}
 
-  .reminder-section {
-    margin-top: 30px;
-    width: 300px;
-    text-align: left;
-  }
-  
-  .reminder-input {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .reminder-input input {
-    flex: 1;
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .reminder-input button {
-    background-color: pink;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    cursor: pointer;
-  }
-  
-  .reminder-input button:hover {
-    background-color: lightpink;
-  }
-  
-  .reminder-list {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 10px;
-  }
-  
-  .reminder-list li {
-    background: #FFD1DC;
-    border-radius: 6px;
-    padding: 6px 10px;
-    margin-bottom: 5px;
-  }
+.react-calendar__tile:hover {
+  border-radius: 8px;
+}
+
+.react-calendar__tile {
+  height: 100px;
+  padding: 10px;
+  position: relative;
+  border: none;
+}
+
+.react-calendar__tile--now {
+  background: #ffe3ec !important;
+  border-radius: 8px;
+  color: #333;
+}
+
+.react-calendar__tile--active {
+  background: lightpink !important;
+  border-radius: 8px;
+}
+
+.calendar-layout {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.reminder-section {
+  width: 300px;
+  text-align: left;
+  margin-top: 30px;
+}
+
+.reminder-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.reminder-input input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff; 
+}
+
+.reminder-input button {
+  background-color: pink;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.reminder-input button:hover {
+  background-color: lightpink;
+}
+
+.reminder-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.reminder-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFD1DC;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 5px;
+  user-select: none;
+}
+
+.reminder-list li.done span {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.reminder-list li span {
+  background: none; 
+  padding: 0;
+  margin: 0;
+}
+
+.reminder-list input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: white;
+}
+
+.tile-reminders {
+  margin-top: 5px;
+  font-size: 0.55rem;
+  background: none;
+
+  display: flex;         
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tile-reminder {
+  background: #ffd1dc;
+  padding: 2px;
+  border-radius: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
