@@ -40,7 +40,7 @@ function UploadNoteButton({ onAddNote }){
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
             />
-            <button onClick={triggerFileInput}>
+            <button className="uploadnote" onClick={triggerFileInput}>
                 Upload File
             </button>
             {/* {selectedFile && <p>Selected file: {selectedFile.name}</p>}
