@@ -1,6 +1,7 @@
 
 require('dotenv').config()
 const express = require('express');
+const path = require("path");
 const cors = require('cors');
 const db = require('./database');
 const notesRoutes = require('./routes/notes');
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 //Routes
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/notes', notesRoutes);
 app.use("/auth", authRoutes);
 

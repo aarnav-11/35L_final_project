@@ -5,6 +5,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database');
 
+const API_BASE_URL = "http://localhost:3000/notes";
+
 //get method to get all notes
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM notes ORDER BY created_at DESC';
@@ -44,11 +46,11 @@ router.post('/', (req,res)=>{
 router.post("/upload", upload.single("file"), (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const file = req.file;
-    // insert a new note into SQLite
     const query = 'INSERT INTO notes (title, text) VALUES (?, ?)';
     const title = file.originalname;
-    const text = "Uploaded PDF placeholder"; // later parse PDF???
-    db.run(query, [title, text], function(err){
+    const fileURL = `http://localhost:3000/uploads/${file.filename}`;
+    //const text = `${API_BASE_URL}/uploads/${file.filename}`;
+    db.run(query, [title, fileURL], function(err){
         if (err){
             res.status(500).json({ error: err.message });
             return;
@@ -56,9 +58,9 @@ router.post("/upload", upload.single("file"), (req, res) => {
         res.status(201).json({
             id: this.lastID,
             title,
-            text,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            text: fileURL,
+            // created_at: new Date().toISOString(),
+            // updated_at: new Date().toISOString()
         });
     });
 });

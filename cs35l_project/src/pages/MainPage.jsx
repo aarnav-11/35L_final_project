@@ -66,7 +66,7 @@ function MainPage() {
     }
   }
 
-  const removeNote = async () => {
+  const removeNote = async (id) => {
     try {
       const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
 
@@ -79,22 +79,41 @@ function MainPage() {
     }
   };
 
-  const uploadNote = async () => {
-    try{
-      setLoading(true);
-      const response = await fetch(API_BASE_URL);
+  const uploadNote = async (file) => {
+    // try{
+    //   setLoading(true);
+    //   const response = await fetch(API_BASE_URL);
       
+    //   if (!response.ok){
+    //     throw new Error('Failed to fetch notes');
+    //   }
+
+    //   const data = await response.json();
+    //   uploadNote(data);
+    //   setLoading(false);
+
+    // } catch (err) {
+    //   setError(err.message);
+    //   setLoading(false);
+    // }
+    const formData = new FormData();
+    formData.append("file", file);
+    try{
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
       if (!response.ok){
-        throw new Error('Failed to fetch notes');
+        throw new Error('Failed to upload note');
       }
 
-      const data = await response.json();
-      uploadNote(data);
-      setLoading(false);
+      const newNote = await response.json();
 
+      setNotes([newNote, ...notes]);
     } catch (err) {
-      setError(err.message);
-      setLoading(false);
+      console.error(err);
+      alert(`Failed to upload note, please try again`);
     }
   };
 
@@ -114,7 +133,7 @@ function MainPage() {
       <div className="header-container">
         <Searchbar value={searchQuery} onChange={setSearchQuery} />
         <AddNoteButton onAddNote={addNote} />
-        <UploadNoteButton onAddNote={addNote} />
+        <UploadNoteButton onUploadNote={uploadNote} />
       </div>
       <div className='notes-grid'>
         {filteredNotes.map((note) => (

@@ -3,7 +3,7 @@ import React, {useState, useRef} from "react";
 import "./UploadNoteButton.css";
 import './AddNoteButton.jsx'
 
-function UploadNoteButton({ onAddNote }){
+function UploadNoteButton({ onUploadNote }){
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
 
@@ -16,14 +16,12 @@ function UploadNoteButton({ onAddNote }){
           alert('Please select a file');
         }
       };
-   
+    
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (!file) return;
         setSelectedFile(file);
-        const previewURL = URL.createObjectURL(file);
-        const fileName = file.name;
-        onAddNote(fileName, previewURL);
+        onUploadNote(file);
         handleUploadClick;
     };
 
@@ -43,10 +41,6 @@ function UploadNoteButton({ onAddNote }){
             <button className="uploadnote" onClick={triggerFileInput}>
                 Upload File
             </button>
-            {/* {selectedFile && <p>Selected file: {selectedFile.name}</p>}
-            <button onClick={handleUploadClick} disabled={!selectedFile}>
-                Upload File
-            </button> */}
         </div>
     );
 }
