@@ -13,7 +13,19 @@ app.use(cors());
 app.use(express.json());
 
 //Routes
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+//app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.get('/uploads/:filename', (req, res) => {
+    const filePath = path.join(__dirname, 'uploads', req.params.filename);
+    res.sendFile(filePath, {
+      headers: {
+        'Content-Disposition': 'inline'
+      }
+    }, (err) => {
+      if (err) {
+        res.status(404).send('File not found');
+      }
+    });
+  });  
 app.use('/notes', notesRoutes);
 app.use("/auth", authRoutes);
 
