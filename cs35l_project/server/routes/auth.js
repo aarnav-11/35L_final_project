@@ -4,6 +4,7 @@ const router = express.Router();
 const db = require("../database");
 const { generateAccessToken, generateRefreshToken, storeRefreshToken, verifyToken, deleteRefreshToken, deleteRefreshTokensByUserId } = require("../utils/jwt");
 const { requireAuth } = require("../middleware/auth");
+const bcrypt = require("bcrypt");
 //I used ai autocorrect for some of the endpoints, especially with error handling
 /*
 When a user submits their login details we need to write a post request to the db to store them
@@ -33,6 +34,7 @@ function passwordCheck(password){
     }
     return true;
 }
+
 //////////////////////////////////////////////////////////////////////
 ////IMPORTANT: the password isnt hashed yet so we need to do that////
 //////////////////////////////////////////////////////////////////////
@@ -81,10 +83,12 @@ router.post('/signup', (req, res) => {
         if (row){
             return res.status(409).send("User already exists please log in instead");
         }
+        //hash password
+        const hashedPassword = bycrypt.hash(password, 10);
 
         //insert user into the database
         const insertQuery = 'INSERT INTO users (name, age, favProf, email, password) VALUES (?, ?, ?, ?, ?)';
-        db.run(insertQuery, [name, ageNum, favProf, email, password], function(err){
+        db.run(insertQuery, [name, ageNum, favProf, email, hashedPassword], function(err){
             if (err){
                 return res.status(500).send(err.message);
             }
@@ -132,35 +136,55 @@ router.post("/login", (req, res) => {
     const {email, password} = req.body;
 
     const emailQuery = 'SELECT * FROM users WHERE email = ?';
-    db.get(emailQuery, [email], function(err, row){
+    db.get(emailQuery, [email], function(err, user){
         if (err){
             return res.status(500).send(err.message);
         }
-        if (!row){
-            return res.status(401).send("Email not found, please sign up instead")
+        
+        // Generic error message for security (don't reveal if email exists)
+        if (!user){
+            return res.status(401).send("Invalid email or password");
         }
-        if (row){
-            db.get(emailQuery, [email], function(err,row){
-                if (err){
-                    return res.status(500).send(err.message);
-                }
-                if (row.password !== password){
-                    return res.status(401).send("Password doesn't match, try again or resetting it")
-                }
-                if (row.password === password){
-                    const accessToken = generateAccessToken(row.id, email);
-                    const refreshToken = generateRefreshToken(row.id);
-                    deleteRefreshTokensByUserId(row.id);
-                    storeRefreshToken(row.id, refreshToken);
-                    res.cookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
-                    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true, maxAge: 3600000 });
-                    return res.status(200).json({
-                        success: true,
-                        message: "Login successful"
-                    });
-                }
-            });
+
+        // Compare password with hashed password using bcrypt
+        const passwordMatch = bcrypt.compareSync(password, user.password);
+        if (!passwordMatch){
+            return res.status(401).send("Invalid email or password");
         }
+
+        // Password matches - proceed with login
+        const accessToken = generateAccessToken(user.id, email);
+        const refreshToken = generateRefreshToken(user.id);
+        
+        // Delete old refresh tokens
+        deleteRefreshTokensByUserId(user.id);
+        
+        // Store new refresh token
+        storeRefreshToken(user.id, refreshToken);
+        
+        // Set cookies
+        res.cookie("accessToken", accessToken, { 
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'strict',
+            maxAge: 15 * 60 * 1000 // 15 minutes
+        });
+        res.cookie("refreshToken", refreshToken, { 
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production', 
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+        
+        return res.status(200).json({
+            success: true,
+            message: "Login successful",
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }
+        });
     });
 });
 

@@ -7,7 +7,7 @@ const { requireAuth } = require('../middleware/auth');
 //get method to get all notes
 router.get('/', requireAuth ,(req, res) => {
     const userid = req.user.userId;
-    const query = 'SELECT * FROM notes ORDER BY created_at DESC WHERE user_id = ?';
+    const query = 'SELECT * FROM notes WHERE user_id = ? ORDER BY created_at DESC';
     db.all(query, [userid], (err, rows) => {
         if (err){
             res.status(500).send(err.message);
