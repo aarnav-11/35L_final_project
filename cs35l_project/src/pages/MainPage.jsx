@@ -6,6 +6,7 @@ import AddNoteButton from "../components/AddNoteButton"
 import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
+import LogoutButton from '../components/LogoutButton'
 
 const API_BASE_URL = "http://localhost:3000/api/notes";
 

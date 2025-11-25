@@ -63,7 +63,7 @@ function Authentication(){
                     <h1>{action}</h1>
                 </div>
                 <div className="authBody"> 
-                    {error && <div className="error">{error}</div>}
+                    { error && <div className="error">{error}</div>}
                     {action === "Log In" ? <div></div> : 
                     <div>
                         <div>
@@ -97,8 +97,8 @@ function Authentication(){
                 }
                 </div>
                 <div className="signButtons">
-                    <button onClick={ () => setAction("Sign Up")} className="signButton">Sign Up</button>
-                    <button onClick={ () => setAction("Log In")} className ="signButton">Log in</button>
+                    <button  onClick={ () => setAction("Sign Up")} className="signButton">Sign Up</button>
+                    <button  onClick={ () => setAction("Log In")} className ="signButton">Log in</button>
                 </div>
                 </form>
             </div>
