@@ -41,3 +41,42 @@ async function saveWebsite(endpoint){
     const result = await response.json();
     return result;
 }
+
+// Extract 30-40 words from the page
+function extractPageContent() {
+    // Get all text content from the page
+    const body = document.body;
+    if (!body) return '';
+
+    // Clone body to avoid modifying the original
+    const clone = body.cloneNode(true);
+    
+    // Remove script and style elements
+    const scripts = clone.querySelectorAll('script, style, noscript, iframe, nav, header, footer');
+    scripts.forEach(el => el.remove());
+
+    // Get text content
+    let text = clone.textContent || clone.innerText || '';
+    
+    // Clean up whitespace
+    text = text.replace(/\s+/g, ' ').trim();
+    
+    // Extract first 30-40 words
+    const words = text.split(/\s+/).filter(word => word.length > 0);
+    const extractedWords = words.slice(0, 40).join(' ');
+    
+    return extractedWords;
+}
+
+// Listen for messages from background script
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'extractContent') {
+        try {
+            const content = extractPageContent();
+            sendResponse({ content: content });
+        } catch (error) {
+            sendResponse({ error: error.message });
+        }
+    }
+    return true; // Keep message channel open
+});

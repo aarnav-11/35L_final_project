@@ -1,3 +1,6 @@
 1. Signup login would not work at all (had to setup a lot of states in authentication)
 2. massive error was that everytime youd click the login or signup button it would technically submit the form and then that would mean it would start doing error checking on email and password so emial+pass would show as incorrect even when they werent even submitted.
     -I still dont know how to fix it
+3. Chrome extensions can't directly access httpOnly cookies, so we need to either:
+    Get token from login response and store in chrome.storage
+    Use credentials: 'include' in fetch (cookies should be sent automatically for same-origin requests)
