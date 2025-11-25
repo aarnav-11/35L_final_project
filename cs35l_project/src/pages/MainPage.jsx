@@ -6,8 +6,9 @@ import AddNoteButton from "../components/AddNoteButton"
 import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
+import LogoutButton from '../components/LogoutButton'
 
-const API_BASE_URL = "http://localhost:3000/notes";
+const API_BASE_URL = "http://localhost:3000/api/notes";
 
 function MainPage() {
   const [notes, setNotes] = useState([]);
@@ -18,7 +19,7 @@ function MainPage() {
   const fetchNotes = async () => {
     try{
       setLoading(true);
-      const response = await fetch(API_BASE_URL);
+      const response = await fetch(API_BASE_URL, { credentials: 'include' });
       
       if (!response.ok){
         throw new Error('Failed to fetch notes');
@@ -41,6 +42,7 @@ function MainPage() {
   const addNote = async (title, noteText) => {
     try{
       const response = await fetch(API_BASE_URL, {
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +69,7 @@ function MainPage() {
 
   const removeNote = async (id) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE', credentials: 'include' });
 
       if (!res.ok) throw new Error(`Failed to delete note (${res.status})`);
       // if server returns 204, there’s no body to parse then skip res.json()

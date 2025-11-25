@@ -1,0 +1,13 @@
+
+Aarnav: used AI to generate the SQL queries and a little help for the db operations, creating tables etc. The prompt was normally, I need a table which has ... and runs in this part of the code for a db.run/db.get etc.
+Aarnav: I used ai autocorrect for some of the endpoints, especially with error handling
+Aarnav: Since I did not have much of an understanding of how to develop a backend/middleware I asked ai to generate a plan for me, using cursor's plan feature.
+Aarnav: prompt: first generate a plan to hash the passwords using bycrypt: it returned a response below and I refed it into cursor.
+                Fix Login Route (POST /login)
+                Location: Around lines 132-165 in auth.js
+                Remove redundant database query (lines 143-163 query the same user twice)
+                After getting user from first query (line 136):
+                Use bcrypt.compareSync(password, row.password) to verify password
+                Replace plain text comparison (line 148: row.password !== password)
+                Use generic error message for security (don't reveal if email exists)
+Aarnav: pasted some code from authContext into chatGPT 5.1 and asked it to explain and refactor the code (go line by line and explain. like you are defending ur phd)

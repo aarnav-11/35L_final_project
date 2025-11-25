@@ -2,11 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
+const { requireAuth } = require('../middleware/auth');
 
 //get method to get all notes
-router.get('/', (req, res) => {
-    const query = 'SELECT * FROM notes ORDER BY created_at DESC';
-    db.all(query, (err, rows) => {
+router.get('/', requireAuth ,(req, res) => {
+    const userid = req.user.userId;
+    const query = 'SELECT * FROM notes WHERE user_id = ? ORDER BY created_at DESC';
+    db.all(query, [userid], (err, rows) => {
         if (err){
             res.status(500).send(err.message);
             return;
@@ -16,15 +18,16 @@ router.get('/', (req, res) => {
 });
 
 //method to post notes
-router.post('/', (req,res)=>{
+router.post('/', requireAuth, (req,res)=>{
+    const userid = req.user.userId;
     const {title, text} = req.body;
     if (text.trim() === ""){
         res.status(400).send("Note text cannot be empty");
         return;
     }
     //insert the note into the database
-    const query = 'INSERT INTO notes (title, text) VALUES (?, ?)';
-    db.run(query, [title || "Untitled Thought", text], function(err){
+    const query = 'INSERT INTO notes (user_id, title, text) VALUES (?, ?, ?)';
+    db.run(query, [userid, title || "Untitled Thought", text], function(err){
         if (err){
             res.status(500).send(err.message);
             return;
@@ -40,10 +43,11 @@ router.post('/', (req,res)=>{
 });
 
 //method to delete notes
-router.delete("/:id", (req, res) => {
+router.delete("/:id", requireAuth, (req, res) => {
+    const userid = req.user.userId;
     const { id } = req.params;
-    const query = 'DELETE FROM notes WHERE id = ?';
-    db.run(query, [id], function(err){
+    const query = 'DELETE FROM notes WHERE id = ? AND user_id = ?';
+    db.run(query, [id, userid], function(err){
         if (err){
             res.status(500).send(err.message);
             return;
