@@ -27,7 +27,7 @@ export default function AuthProvider({ children }) {
                 setIsAuthenticated(false);
             }
         } catch (err) {
-            console.error("Auth check failed:", err);
+            console.error("auth check failed:", err);
             setUser(null);
             setIsAuthenticated(false);
         } finally {
@@ -47,15 +47,16 @@ export default function AuthProvider({ children }) {
 
             if (!res.ok) {
                 const errorMessage = await res.text();
-                console.log(errorMessage);
+                throw new Error(errorMessage);
             }
 
+            const data = await res.json();
             setUser(data.user);
             setIsAuthenticated(true);
             navigate("/home");
 
         } catch (err) {
-            console.error("Signup error:", err.message);
+            console.error("signup error:", err.message);
             throw err;
         }
     };
@@ -71,18 +72,16 @@ export default function AuthProvider({ children }) {
 
             if (!res.ok) {
                 const errorMessage = await res.text();
-                console.log(errorMessage);
+                throw new Error(errorMessage);
             }
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.message);
-
             setUser(data.user);
             setIsAuthenticated(true);
             navigate("/home");
 
         } catch (err) {
-            console.error("Login error:", err.message);
+            console.error("login error:", err.message);
             throw err;
         }
     };
@@ -98,7 +97,7 @@ export default function AuthProvider({ children }) {
             setIsAuthenticated(false);
             navigate("/");
         } catch (err) {
-            console.error("Logout error:", err);
+            console.error("logout error:", err);
         }
     };
 
@@ -110,7 +109,7 @@ export default function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{ user, isAuthenticated, loading, signup, login, logout }} //value is the data that is shared with the components
         >
-            {children} /*children are the components that are wrapped by the AuthProvider*/
+            {children}
         </AuthContext.Provider>
     );
 }

@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require("../database");
 const { generateAccessToken, generateRefreshToken, storeRefreshToken, verifyToken, deleteRefreshToken, deleteRefreshTokensByUserId } = require("../utils/jwt");
 const { requireAuth } = require("../middleware/auth");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 //I used ai autocorrect for some of the endpoints, especially with error handling
 /*
 When a user submits their login details we need to write a post request to the db to store them
@@ -84,7 +84,7 @@ router.post('/signup', (req, res) => {
             return res.status(409).send("User already exists please log in instead");
         }
         //hash password
-        const hashedPassword = bycrypt.hash(password, 10);
+        const hashedPassword = bcrypt.hashSync(password, 10);
 
         //insert user into the database
         const insertQuery = 'INSERT INTO users (name, age, favProf, email, password) VALUES (?, ?, ?, ?, ?)';
