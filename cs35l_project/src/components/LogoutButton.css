@@ -1,3 +1,22 @@
 .logout-button{
-    
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: rgb(93, 90, 90);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    font: inherit;
+}
+
+.logout-button:hover{
+    transform: translateY(-1px);
+}
+
+.logout-button:disabled{
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
 }

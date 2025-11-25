@@ -9,7 +9,7 @@ import "./LogoutButton.css";
 function LogoutButton(){
     const {logout, loading} = useContext(AuthContext);
     return(
-        <button className="logout-button" onClick={logout} disabled={loading}>Logout</button>
+        <button className="logout-button" onClick={logout} disabled={loading}>Log out</button>
     );
 }
 
