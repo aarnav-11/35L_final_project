@@ -6,7 +6,6 @@
     display: flex;
     gap: 1rem;
     text-decoration: none;
-    background-color: white;
 }
 
 .navigation a{
@@ -22,6 +21,10 @@
     transform: translateY(-1px);
 }
 
-.contact:hover{
+.login:hover{
+    transform: translateY(-1px);
+}
+
+.logout:hover{
     transform: translateY(-1px);
 }

@@ -1,0 +1,14 @@
+.title{
+    justify-content: left;
+    text-align: left;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    font-size: 3rem;
+    opacity: 0.8;
+    
+}
+hr{
+    opacity: 0.2;
+    color: #e0e0e0;
+    border-color: #e0e0e0;
+}

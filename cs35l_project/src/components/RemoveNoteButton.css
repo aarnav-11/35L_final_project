@@ -1,9 +1,21 @@
 .remove-note-button{
-    background-color: orange;
+    background-color: var(--color-primary);
     color: white;
     border: none;
     height: 25px;
     width: 25px;
-    border-radius: 100%;
+    border-radius: var(--radius-full);
     font-weight: bolder;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease;
+}
+
+.remove-note-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.remove-note-button:focus-visible {
+    outline: 2px solid var(--color-primary-dark);
+    outline-offset: 2px;
 }

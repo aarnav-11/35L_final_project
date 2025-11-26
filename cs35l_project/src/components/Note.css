@@ -1,10 +1,20 @@
-.note-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    break-inside: avoid; /* helps with experimental masonry grid */
+  .note-card {
+    background: var(--color-background);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-md);
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    height: auto;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .note-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
   }
 
   .note-card h1{
@@ -19,4 +29,22 @@
 
   .note-header{
     background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .note-header h1 {
+    margin: 0;
+    flex: 1;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .note-card p {
+    line-height: 1.6;
+    margin-top: 0.5rem;
   }

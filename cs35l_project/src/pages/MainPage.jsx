@@ -41,6 +41,7 @@ function MainPage() {
 
   const addNote = async (title, noteText) => {
     try{
+      setError(null);
       const response = await fetch(API_BASE_URL, {
         credentials: 'include',
         method: 'POST',
@@ -63,12 +64,13 @@ function MainPage() {
       setNotes([newNote, ...notes]);
     } catch (err) {
       console.error(err);
-      alert(`Failed to add note, please try again`);
+      setError('Failed to add note, please try again');
     }
   }
 
   const removeNote = async (id) => {
     try {
+      setError(null);
       const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE', credentials: 'include' });
 
       if (!res.ok) throw new Error(`Failed to delete note (${res.status})`);
@@ -76,7 +78,7 @@ function MainPage() {
       setNotes(prev => prev.filter(n => n.id !== id));
     } catch (err) {
       console.error(err);
-      alert('Failed to delete note, please try again');
+      setError('Failed to delete note, please try again');
     }
   };
 
