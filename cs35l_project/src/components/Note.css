@@ -1,5 +1,5 @@
 .note-card {
-    background: #fff;
+    background: white;
     border-radius: 12px;
     padding: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -9,8 +9,14 @@
 
   .note-card h1{
     color: #000;
+    background-color: white;
   }
 
   .note-card p{
     color: #000;
+    background-color: white;
+  }
+
+  .note-header{
+    background-color: white;
   }

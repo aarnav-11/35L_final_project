@@ -1,7 +1,7 @@
 
 {
-    "name": "Hello Extensions",
-    "description": "Base Level Extension",
+    "name": "Mind App Chrome Extension",
+    "description": "Chrome Extension for Mind App",
     "version": "1.0",
     "manifest_version": 3,
     "permissions": [
