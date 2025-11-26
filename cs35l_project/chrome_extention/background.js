@@ -22,7 +22,7 @@ async function saveWebsite(){
          });
      });
 
-     //format text: clickable HTML link + extracted content
+     //format text: clickable HTML link
      const text = `<a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>\n\n${extractedContent}`;
 
      const response = await fetch(`${API_BASE_URL}`,{
@@ -40,6 +40,11 @@ async function saveWebsite(){
         throw new Error(errorText);
      }
         const result = await response.json();
+        console.log('[Extension] Note saved successfully!', { 
+            noteId: result.id, 
+            title: result.title,
+            createdAt: result.created_at 
+        });
         return { success: true, data: result };
     }catch (error) {
         console.error(error);
