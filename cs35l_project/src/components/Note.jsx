@@ -111,7 +111,7 @@ function Note({ note, onRemoveNote }){
                 <RemoveNoteButton onRemoveNote={onRemoveNote} />
                 <h1>{note.title || "Untitled Thought"}</h1>
             </div>
-            <p>{renderText(note.text)}</p>
+            <p className="note-text">{renderText(note.text)}</p>
             {tags.length > 0 && (
                 <div className="note-tags">
                     {tags.map((tag, index) => (
