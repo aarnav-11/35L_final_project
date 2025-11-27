@@ -3,6 +3,7 @@ import React, { useState, useContext} from "react";
 import "./Authentication.css";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import Background from '../../components/Background';
 
 function Authentication(){
     const navigate = useNavigate();
@@ -56,7 +57,18 @@ function Authentication(){
     };
 
     return(
+        
         <div className="mainMainBox">
+            <Background colors={[
+  "#9BF267",
+  "#C6FF8A",
+  "#7AF2FF",
+  "#4BC8FF",
+  "#5570FF",
+  "#A56BFF",
+  "#FF76D6",
+  "#FFB470"
+]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
             <div className="mainBox">
                 <form onSubmit={handleSubmit}>
                 <div className="auth">

@@ -93,8 +93,8 @@ function MainPage() {
 
   return(
     <div className='app'>
-      <Background colors={["#ff5c7a", "#8a5cff", "#00ffd1"]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
-      <div className='navigation'>
+        <Background colors={["#9BF267", "#C6FF8A", "#7AF2FF", "#4BC8FF", "#5570FF", "#A56BFF", "#FF76D6", "#FFB470"]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
+        <div className='navigation'>
         <Navigation/>
       </div>
       <div className="header-container">
