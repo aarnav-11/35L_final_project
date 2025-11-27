@@ -1,5 +1,5 @@
   .note-card {
-    background: var(--color-background);
+    background: white;
     border-radius: var(--radius-lg);
     padding: var(--spacing-md);
     box-shadow: var(--shadow-md);

@@ -6,7 +6,7 @@
     border: none;
     font-size: 5.5rem;
     font-weight: 300;
-    background-color: transparent;
+    background-color: white;
 }
 
 .addnote:focus-visible{
@@ -55,7 +55,7 @@
 }
 
 .note-editor-content {
-    background: white;
+    background: transparent;
     border-radius: 12px;
     padding: 2rem;
     width: 90%;
@@ -76,7 +76,7 @@
     width: 32px;
     border: 1px solid var(--color-primary);
     background-color: var(--color-primary);
-    color: white;
+    color: transparent;
     font-weight: bold;
     font-size: 20px;
     cursor: pointer;
@@ -93,7 +93,7 @@
 
 .save-button{
     background-color: var(--color-primary);
-    color: white;
+    color: transparent;
     border: none;
     height: 50px;
     width: 83%;
@@ -129,4 +129,8 @@
     border: 1px solid #ccc;
     resize: none;
     font-family: inherit;
+}
+
+.addnote-wrapper {
+    background-color: white;
 }
