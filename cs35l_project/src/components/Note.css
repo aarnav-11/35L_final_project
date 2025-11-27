@@ -10,7 +10,6 @@
     width: 100%;
     height: auto;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    z-index: 2;
   }
   
   .note-card:hover {
@@ -34,7 +33,6 @@
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 0.75rem;
-    z-index: 2;
   }
   
   .note-header h1 {
@@ -50,6 +48,5 @@
   .note-card p {
     line-height: 1.6;
     margin-top: 0.5rem;
-    z-index: 2;
     background-color: transparent;
   }

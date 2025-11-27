@@ -1,6 +1,7 @@
 
 import "./Note.css";
 import RemoveNoteButton from "./RemoveNoteButton";
+import Tag from "./Tag";
 import React from 'react';
 
 function Note({ note, onRemoveNote }){
@@ -101,7 +102,9 @@ function Note({ note, onRemoveNote }){
         
         return parts;
     };
-
+    // Safely get tags - ensure it's an array
+    const tags = Array.isArray(note.tags) ? note.tags : [];
+    
     return(
         <div className="note-card">
             <div className="note-header">
@@ -109,6 +112,13 @@ function Note({ note, onRemoveNote }){
                 <h1>{note.title || "Untitled Thought"}</h1>
             </div>
             <p>{renderText(note.text)}</p>
+            {tags.length > 0 && (
+                <div className="note-tags">
+                    {tags.map((tag, index) => (
+                        <Tag key={index} tagValue={tag} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

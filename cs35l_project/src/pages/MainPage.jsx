@@ -42,16 +42,26 @@ function MainPage() {
     }, []);
 
     const generateTags = async (title, text) => {
-      const response = await fetch("http://localhost:3000/api/tags", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title, text }),
-      });
-    
-      const data = await response.json();
-      return data.tags;
+      try {
+        const response = await fetch("http://localhost:3000/api/tags", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, text }),
+        });
+      
+        if (!response.ok) {
+          console.error("Failed to generate tags:", response.status, response.statusText);
+          return ["failed to generate tags"]; // Return empty array if tag generation fails
+        }
+        
+        const data = await response.json();
+        return data.tags || []; // Return tags array or empty array if undefined
+      } catch (err) {
+        console.error("Error generating tags:", err);
+        return ["failed to generate tags"]; // Return empty array on error so note can still be added
+      }
     };
     
 
@@ -75,10 +85,21 @@ function MainPage() {
       }
 
       const newNote = await response.json();
-      const tags = await generateTags(title, noteText);
-      console.log(tags);
-      //add new note to the notes array beginning
-      setNotes([{ ...newNote, tags }, ...notes]);
+      
+      // generate tags asynchronously - don't block note creation if it fails
+      generateTags(title, noteText).then(tags => {
+        console.log("Generated tags:", tags);
+        setNotes(prevNotes => 
+          prevNotes.map(note => 
+            note.id === newNote.id ? { ...note, tags } : note
+          )
+        );
+      }).catch(err => {
+        console.error("Failed to generate tags:", err);
+        // note is still added, just without tags
+      });
+      
+      setNotes([{ ...newNote, tags: [] }, ...notes]);
     } catch (err) {
       console.error(err);
       setError('Failed to add note, please try again');

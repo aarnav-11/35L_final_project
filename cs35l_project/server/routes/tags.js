@@ -1,21 +1,95 @@
 
+const express = require('express');
+const router = express.Router();
+const { spawn } = require('child_process');
+const path = require('path');
+
+router.post("/", async (req, res) => {
+    try {
+        const { title, text } = req.body;
+        
+        if (!title && !text) {
+            return res.status(400).json({ error: "Title or text is required" });
+        }
+        
+        // Path to the Python script
+        const pythonScriptPath = path.join(__dirname, '..', 'tags.py');
+        
+        // Prepare input data as JSON
+        const inputData = JSON.stringify({ title: title || "", text: text || "" });
+        
+        // Execute Python script with input from stdin
+        const pythonProcess = spawn('python3', [pythonScriptPath]);
+        
+        let stdout = '';
+        let stderr = '';
+        
+        pythonProcess.stdout.on('data', (data) => {
+            stdout += data.toString();
+        });
+        
+        pythonProcess.stderr.on('data', (data) => {
+            stderr += data.toString();
+        });
+        
+        // Send input to Python script
+        pythonProcess.stdin.write(inputData);
+        pythonProcess.stdin.end();
+        
+        // Wait for the process to finish
+        await new Promise((resolve, reject) => {
+            pythonProcess.on('close', (code) => {
+                if (code !== 0) {
+                    reject(new Error(`Python script exited with code ${code}: ${stderr}`));
+                } else {
+                    resolve();
+                }
+            });
+            
+            pythonProcess.on('error', (err) => {
+                reject(err);
+            });
+        });
+        
+        if (stderr) {
+            console.error("Python script stderr:", stderr);
+        }
+        
+        // Parse the JSON response from Python
+        const result = JSON.parse(stdout);
+        
+        if (result.error) {
+            console.error("Error from Python script:", result.error);
+            return res.status(500).json({ error: result.error });
+        }
+        
+        res.json({ tags: result.tags || [] });
+        console.log("Generated tags:", result.tags);
+        
+    } catch (err) {
+        console.error("Error generating tags:", err);
+        res.status(500).json({ error: "Gemini error: " + err.message });
+    }
+});
+
+module.exports = router;
+
+
+
+
+
 // const express = require('express');
 // const router = express.Router();
-// const { GoogleGenAI } = require("@google/genai");
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // router.post("/", async (req, res) => {
 // try {
 //     const { title, text } = req.body;
-//     const apiKey = process.env.GEMINI_API_KEY;
 
-// // The client gets the API key from the environment variable `GEMINI_API_KEY`.
-//     const ai = new GoogleGenAI({apiKey: `"${apiKey}"`});
-
-//     const response = await ai.models.generateContent({
-//         model: "gemini-2.5-flash",
-//         contents: `Generate 3-5 relevant tags for this note: ${title} ${text}. 
-//         Return only a comma-separated list.`,
-//     });
+//     const ai = new GoogleGenerativeAI({apiKey: "AIzaSyCwFv9X4-yHX1M-XqBzqFh65nEfDZD34oU"});
+//     const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+//     const response = await model.generateContent(`Generate 3-5 relevant tags for this note: ${title} ${text}. 
+//     Return only a comma-separated list.`);
 //     res.json({ tags: response.text });
 //     console.log(response.text);
 
@@ -26,32 +100,3 @@
 // });
 
 // module.exports = router;
-
-
-
-
-
-const express = require('express');
-const router = express.Router();
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-router.post("/", async (req, res) => {
-try {
-    const { title, text } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY;
-
-// The client gets the API key from the environment variable `GEMINI_API_KEY`.
-    const ai = new GoogleGenerativeAI({apiKey: apiKey});
-    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
-    const response = await model.generateContent(`Generate 3-5 relevant tags for this note: ${title} ${text}. 
-    Return only a comma-separated list.`);
-    res.json({ tags: response.text });
-    console.log(response.text);
-
-} catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Gemini error" });
-}
-});
-
-module.exports = router;
