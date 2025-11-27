@@ -86,7 +86,7 @@ module.exports = router;
 // try {
 //     const { title, text } = req.body;
 
-//     const ai = new GoogleGenerativeAI({apiKey: "AIzaSyCwFv9X4-yHX1M-XqBzqFh65nEfDZD34oU"});
+//     const ai = new GoogleGenerativeAI({apiKey: process.env.GEMINI_API_KEY});
 //     const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
 //     const response = await model.generateContent(`Generate 3-5 relevant tags for this note: ${title} ${text}. 
 //     Return only a comma-separated list.`);
