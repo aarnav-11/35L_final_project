@@ -8,7 +8,7 @@ function Searchbar({ value, onChange }) {
         <>
             <div className="input-wrapper">
                 <FaSearch id="search-icon" />
-                <input
+                <input className="search-input"
                   placeholder="Search your mind"
                   value={value}
                   onChange={(e) => onChange(e.target.value)}

@@ -5,6 +5,7 @@ const cors = require('cors');
 const db = require('./database');
 const notesRoutes = require('./routes/notes');
 const authRoutes = require("./routes/auth");
+const spacesRoutes = require("./routes/spaces");
 const app = express();
 const cookieParser = require("cookie-parser");
 
@@ -23,6 +24,7 @@ app.use(express.json());
 //Routes
 app.use('/api/notes', notesRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/spaces", spacesRoutes);
 
 //Start the server
 const PORT = process.env.PORT || 3000;

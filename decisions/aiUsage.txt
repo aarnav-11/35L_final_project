@@ -12,3 +12,4 @@ Aarnav: prompt: first generate a plan to hash the passwords using bycrypt: it re
                 Use generic error message for security (don't reveal if email exists)
 Aarnav: pasted some code from authContext into chatGPT 5.1 and asked it to explain and refactor the code (go line by line and explain. like you are defending ur phd)
 Aarnav: make a plan that is comprehensive to make the savewebsite method and link it (for browser extension)
+Aarnav: used a lot of prompts to help edit the UI
