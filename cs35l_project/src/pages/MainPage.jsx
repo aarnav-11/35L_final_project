@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import Navigation from '../components/Navigation'
 import LogoutButton from '../components/LogoutButton'
 import Background from '../components/Background'
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_BASE_URL = "http://localhost:3000/api/notes";
 
@@ -41,30 +40,6 @@ function MainPage() {
       fetchNotes();
     }, []);
 
-    const generateTags = async (title, text) => {
-      try {
-        const response = await fetch("http://localhost:3000/api/tags", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ title, text }),
-        });
-      
-        if (!response.ok) {
-          console.error("Failed to generate tags:", response.status, response.statusText);
-          return ["failed to generate tags"]; // Return empty array if tag generation fails
-        }
-        
-        const data = await response.json();
-        return data.tags || []; // Return tags array or empty array if undefined
-      } catch (err) {
-        console.error("Error generating tags:", err);
-        return ["failed to generate tags"]; // Return empty array on error so note can still be added
-      }
-    };
-    
-
   const addNote = async (title, noteText) => {
     try{
       setError(null);
@@ -81,25 +56,13 @@ function MainPage() {
       });
 
       if (!response.ok){
-        throw new Error('Failed to add note');
+        alert('Failed to add note');
+        throw new Error('Failed to add note, login credentials expired');
       }
 
       const newNote = await response.json();
       
-      // generate tags asynchronously - don't block note creation if it fails
-      generateTags(title, noteText).then(tags => {
-        console.log("Generated tags:", tags);
-        setNotes(prevNotes => 
-          prevNotes.map(note => 
-            note.id === newNote.id ? { ...note, tags } : note
-          )
-        );
-      }).catch(err => {
-        console.error("Failed to generate tags:", err);
-        // note is still added, just without tags
-      });
-      
-      setNotes([{ ...newNote, tags: [] }, ...notes]);
+      setNotes([newNote, ...notes]);
     } catch (err) {
       console.error(err);
       setError('Failed to add note, please try again');
