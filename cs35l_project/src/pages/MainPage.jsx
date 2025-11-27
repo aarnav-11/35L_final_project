@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Navigation from '../components/Navigation'
 import LogoutButton from '../components/LogoutButton'
 import Background from '../components/Background'
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_BASE_URL = "http://localhost:3000/api/notes";
 
@@ -40,6 +41,20 @@ function MainPage() {
       fetchNotes();
     }, []);
 
+    const generateTags = async (title, text) => {
+      const response = await fetch("http://localhost:3000/api/tags", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, text }),
+      });
+    
+      const data = await response.json();
+      return data.tags;
+    };
+    
+
   const addNote = async (title, noteText) => {
     try{
       setError(null);
@@ -60,9 +75,10 @@ function MainPage() {
       }
 
       const newNote = await response.json();
-
+      const tags = await generateTags(title, noteText);
+      console.log(tags);
       //add new note to the notes array beginning
-      setNotes([newNote, ...notes]);
+      setNotes([{ ...newNote, tags }, ...notes]);
     } catch (err) {
       console.error(err);
       setError('Failed to add note, please try again');

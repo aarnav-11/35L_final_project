@@ -6,6 +6,7 @@ const db = require('./database');
 const notesRoutes = require('./routes/notes');
 const authRoutes = require("./routes/auth");
 const spacesRoutes = require("./routes/spaces");
+const tagsRouter = require('./routes/tags');
 const app = express();
 const cookieParser = require("cookie-parser");
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use('/api/notes', notesRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/spaces", spacesRoutes);
+app.use('/api/tags', tagsRouter);
 
 //Start the server
 const PORT = process.env.PORT || 3000;

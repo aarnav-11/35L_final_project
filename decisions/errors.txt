@@ -6,3 +6,4 @@
     Use credentials: 'include' in fetch (cookies should be sent automatically for same-origin requests)
 4. when a link was added as a note it wasnt clickable so I used ai and regex scripting to: (React escapes HTML, so anchor tags in note.text rendered as plain text. The text used Markdown [text](url), but the code only matched HTML <a> tags.)
     Update Note.jsx to parse both Markdown and HTML links and convert them to React <a> elements so they render as clickable links.
+5. My gemini key was not working and I was wondering why/ spent a lot of time trying to fix it. But I figured that passing it in frontend logic actually leaks the key so I had to pass it in the backend by making a seperate route.

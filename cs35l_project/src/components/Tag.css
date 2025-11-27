@@ -1,0 +1,10 @@
+.tag-body{
+    border: 1.5px solid orange;
+    border-radius: 10px;
+    line-height: 0.005;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+.tag-value{
+    font-size: 1rem;
+}
