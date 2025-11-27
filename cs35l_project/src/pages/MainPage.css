@@ -1,4 +1,13 @@
 
+.app{
+  background-color: transparent;
+}
+.notes-grid{
+  background-color: transparent;
+}
+.navigation{
+  background-color: transparent;
+}
 .header-container{
     display: flex;
     flex-direction: row;
@@ -8,6 +17,7 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 1rem;
+    z-index: 2;
   }
   
   .error-message {
@@ -21,6 +31,7 @@
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
+    z-index: 2;
   }
   
   .loading-container {
@@ -39,7 +50,8 @@
     border-top: 4px solid orange;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-  }
+    z-index: 2;
+}
   
   @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -64,10 +76,11 @@
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
+    z-index: 2;
   }
   
   .note-card {
     width: 100%;
     height: auto;
+    z-index: 2;
   }
-  

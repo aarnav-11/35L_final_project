@@ -1,7 +1,4 @@
 
-*{
-    background-color: #FDFBF8;
-}
 h1{
     font-size: 2.5rem;
     font-weight: 700;
@@ -39,6 +36,7 @@ h1{
     background-color: white;
     padding: 1%;
     width: 300px;
+    size: 10px;
 }
 
 .signButtons{

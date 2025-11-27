@@ -23,24 +23,25 @@ then we need to verify using get requests to the db
     error handling: 400 for operation failed, 409 conflict for duplicate, 500 for internal server errors
 */
 function passwordCheck(password){
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
     if (password.length < 8){
         return "Password should be at least 8 characters"
     }
     if (password.includes(" ")){
         return "Password should not contain spaces"
     }
-    if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password))) {
+    if (!passwordRegex.test(password)) { 
         return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     }
     return true;
 }
 
-//////////////////////////////////////////////////////////////////////
-////IMPORTANT: the password isnt hashed yet so we need to do that////
-//////////////////////////////////////////////////////////////////////
-
 router.post('/signup', (req, res) => {
     const {name, age, favProf, email, password} = req.body;
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //regex for email validation
+
     if(name.trim() === ""){
         return res.status(400).send("Your name cannot be empty");
     }
@@ -65,7 +66,7 @@ router.post('/signup', (req, res) => {
         return res.status(400).send("Please enter a valid age(9-99)");
     }
 
-    if (!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/).test(email)){
+    if (!emailRegex.test(email)){ 
         return res.status(400).send("Please enter a valid email address")
     }
 

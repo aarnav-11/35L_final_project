@@ -7,6 +7,7 @@ import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
 import LogoutButton from '../components/LogoutButton'
+import Background from '../components/Background'
 
 const API_BASE_URL = "http://localhost:3000/api/notes";
 
@@ -92,6 +93,7 @@ function MainPage() {
 
   return(
     <div className='app'>
+      <Background colors={["#ff5c7a", "#8a5cff", "#00ffd1"]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
       <div className='navigation'>
         <Navigation/>
       </div>

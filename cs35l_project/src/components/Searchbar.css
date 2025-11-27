@@ -10,8 +10,8 @@
     align-items: center;
 }
 
-input{
-    background-color: white;
+.search-input{
+    background-color: transparent;
     border: none;
     height: 100%;
     font-size: 4.5rem;
@@ -20,14 +20,14 @@ input{
     font-family: var(--font-family);
 }
 
-input:focus{
+.search-input:focus{
     outline: none;
 }
 
 #search-icon{
     color: var(--color-primary);
     fill: var(--color-primary);
-    background-color: rgba(255, 255, 255);
+    background-color: transparent;
     font-size: 1.5rem;
     width: 1.5rem;
     height: 1.5rem;

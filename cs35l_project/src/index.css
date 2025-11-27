@@ -5,7 +5,7 @@
   --color-primary-dark: #f57c00;
   --color-text: #000;
   --color-text-secondary: #666;
-  --color-background: white;
+  --color-background: transparent;
   --color-error: #c33;
   --color-error-bg: #fee;
   --color-error-border: #fcc;
@@ -30,7 +30,15 @@
   --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-*{
-  background-color: white;
+/* Remove all white backgrounds - let color-bends show through */
+html, body {
+  background-color: transparent !important;
+  margin: 0;
+  padding: 0;
+}
+
+* {
   color: #000;
 }
+
+/* Only specific elements should have white backgrounds (note cards, buttons, etc.) */
