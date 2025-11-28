@@ -77,7 +77,7 @@
     width: 32px;
     border: 1px solid var(--color-primary);
     background-color: var(--color-primary);
-    color: transparent;
+    color: white;
     font-weight: bold;
     font-size: 20px;
     cursor: pointer;
@@ -93,7 +93,7 @@
 
 .save-button{
     background-color: var(--color-primary);
-    color: transparent;
+    color: white;
     border: none;
     height: 50px;
     width: 83%;
@@ -102,6 +102,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    z-index: 1000;
 }
 
 .save-button:hover {
