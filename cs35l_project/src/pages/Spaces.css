@@ -4,10 +4,11 @@
     font-family: 'Times New Roman', Times, serif;
     font-style: italic;
     font-size: 3rem;
-    opacity: 0.8;
-    
+    opacity: 0.6;
+    padding-left: 2%;
+    font-size: 4.5rem;
 }
-hr{
+.spaces-container hr{
     opacity: 0.2;
     color: #e0e0e0;
     border-color: #e0e0e0;

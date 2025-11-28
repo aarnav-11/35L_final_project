@@ -56,12 +56,12 @@ function MainPage() {
       });
 
       if (!response.ok){
-        throw new Error('Failed to add note');
+        alert('Failed to add note');
+        throw new Error('Failed to add note, login credentials expired');
       }
 
       const newNote = await response.json();
-
-      //add new note to the notes array beginning
+      
       setNotes([newNote, ...notes]);
     } catch (err) {
       console.error(err);

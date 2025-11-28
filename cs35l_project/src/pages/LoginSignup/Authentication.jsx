@@ -59,16 +59,7 @@ function Authentication(){
     return(
         
         <div className="mainMainBox">
-            <Background colors={[
-  "#9BF267",
-  "#C6FF8A",
-  "#7AF2FF",
-  "#4BC8FF",
-  "#5570FF",
-  "#A56BFF",
-  "#FF76D6",
-  "#FFB470"
-]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
+            <Background colors={["#9BF267", "#C6FF8A", "#7AF2FF", "#4BC8FF", "#5570FF", "#A56BFF", "#FF76D6", "#FFB470"]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
             <div className="mainBox">
                 <form onSubmit={handleSubmit}>
                 <div className="auth">
@@ -79,26 +70,26 @@ function Authentication(){
                     {action === "Log In" ? <div></div> : 
                     <div>
                         <div>
-                            <label for="name"><h3>Name:</h3></label>
+                            <label htmlFor="name"><h3>Name:</h3></label>
                             <input type="text" id="name" name="name" placeholder= "Enter your name" className="name" value={name} onChange= {(e) => setName(e.target.value)} ></input>
                         </div>
                         <div>
-                            <label for="age"><h3>Age:</h3></label>
+                            <label htmlFor="age"><h3>Age:</h3></label>
                             <input type="text" id="age" name="age" placeholder= "Enter your age" className="age" value={age} onChange = {(e) => setAge(e.target.value)}></input>
                         </div>
                         <div>
-                            <label for="favProf"><h3>Favorite Professor:</h3></label>
+                            <label htmlFor="favProf"><h3>Favorite Professor:</h3></label>
                             <input type="text" id="favProf" name="favProf" placeholder= "Enter your favorite professor" className="favProf" value = {favProf} onChange={(e) => setFavProf(e.target.value)}></input>
                         </div>
                     </div>
                     }
 
                     <div>
-                        <label for="email"><h3>Email:</h3></label>
+                        <label htmlFor="email"><h3>Email:</h3></label>
                         <input type="email" id="email" name="email" placeholder= "Enter your email" className="email" value = {email} onChange = {(e) => setEmail(e.target.value)}></input>
                     </div>
                     <div>
-                        <label for="password"><h3>Password:</h3></label>
+                        <label htmlFor="password"><h3>Password:</h3></label>
                         <input type="password" id="password" name="password" placeholder="Enter your password" className="password" value = {password} onChange = {(e) => setPassword(e.target.value)}></input>
                     </div>
                     {action === "Log In" ? 

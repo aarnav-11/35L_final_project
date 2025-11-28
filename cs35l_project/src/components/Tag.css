@@ -1,0 +1,23 @@
+.tag-body{
+    display: inline-block;
+    padding-bottom: 0.4rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border: 1px solid rgba(255, 145, 0, 0.205);
+    border-radius: 50px;
+    background-color: rgba(255, 166, 0, 0.751);
+}
+.tag-value{
+    font-size: 0.8rem;
+    margin: 0;
+    padding-top: 0.4rem;
+    line-height: 1;
+}
+
+.tag-body:hover{
+    background-color: var(--color-primary-dark);
+}
+
+.tag-body p{
+    color: white;
+}

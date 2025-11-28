@@ -1,23 +1,16 @@
 .app{
   position: relative;
-  z-index: 100;
   background-color: transparent;
   min-height: 100vh;
 }
 
-.notes-grid{
-  background-color: transparent;
-}
-
 .navigation{
   position: relative;
-  z-index: 2;
   background-color: transparent;
 }
 
 .header-container{
     position: relative;
-    z-index: 2;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -39,7 +32,6 @@
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
-    z-index: 2;
   }
   
   .loading-container {
@@ -58,7 +50,6 @@
     border-top: 4px solid orange;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    z-index: 2;
 }
   
   @keyframes spin {
@@ -76,7 +67,6 @@
   
   .notes-grid {
     position: relative;
-    z-index: 2;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-auto-rows: min-content;
@@ -87,11 +77,11 @@
     margin: 0 auto;
     width: 100%;
     background-color: transparent;
+    z-index: 1;
   }
-  
+
   .note-card {
     position: relative;
-    z-index: 2;
     width: 100%;
     height: auto;
   }
