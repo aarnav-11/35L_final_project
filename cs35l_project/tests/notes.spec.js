@@ -89,3 +89,111 @@ test.describe('Authentication Page', () => {
     await expect(page.locator('.error')).toBeVisible({ timeout: 5000 });
   });
 });
+
+////////////////////////////////////////////////////////////
+//NOTES TESTS
+////////////////////////////////////////////////////////////
+
+test.describe('Main Page - Notes', () => {
+  // Login before each test
+  test.beforeEach(async ({ page }) => {
+    await page.goto(BASE_URL);
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await page.locator('#email').fill(EXISTING_USER.email);
+    await page.locator('#password').fill(EXISTING_USER.password);
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await expect(page).toHaveURL(/.*home/, { timeout: 10000 });
+  });
+
+  test('should display notes grid', async ({ page }) => {
+    await expect(page.locator('.notes-grid')).toBeVisible();
+  });
+
+  test('should display navigation bar', async ({ page }) => {
+    await expect(page.locator('nav.navigation')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Home' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Spaces' })).toBeVisible();
+  });
+
+  test('should display search bar', async ({ page }) => {
+    await expect(page.locator('.search-input')).toBeVisible();
+    await expect(page.locator('.search-input')).toHaveAttribute('placeholder', 'Search your mind');
+  });
+
+  test('should display add note button', async ({ page }) => {
+    await expect(page.locator('.addnote')).toBeVisible();
+    await expect(page.locator('.addnote')).toHaveText('+');
+  });
+
+  test('should open note editor when clicking add button', async ({ page }) => {
+    await page.locator('.addnote').click();
+    
+    // Editor should be visible
+    await expect(page.locator('.note-editor')).toBeVisible();
+    await expect(page.locator('.note-title')).toBeVisible();
+    await expect(page.locator('.note-content')).toBeVisible();
+    await expect(page.locator('.save-button')).toBeVisible();
+    await expect(page.locator('.cross-button')).toBeVisible();
+  });
+
+  test('should close editor when clicking X button', async ({ page }) => {
+    await page.locator('.addnote').click();
+    await expect(page.locator('.note-editor')).toBeVisible();
+    
+    await page.locator('.cross-button').click();
+    
+    await expect(page.locator('.note-editor')).not.toBeVisible();
+    await expect(page.locator('.addnote')).toBeVisible();
+  });
+
+  test('should show alert when saving empty note', async ({ page }) => {
+    await page.locator('.addnote').click();
+    
+    // Listen for dialog
+    page.on('dialog', async dialog => {
+      expect(dialog.message()).toContain('empty');
+      await dialog.accept();
+    });
+    
+    await page.locator('.save-button').click();
+  });
+
+  test('should create a new note successfully', async ({ page }) => {
+    const uniqueTitle = `Test Note ${Date.now()}`;
+    const noteContent = 'This is automated test content from Playwright';
+    
+    await page.locator('.addnote').click();
+    
+    await page.locator('.note-title').fill(uniqueTitle);
+    await page.locator('.note-content').fill(noteContent);
+    
+    await page.locator('.save-button').click();
+    
+    // Editor should close
+    await expect(page.locator('.note-editor')).not.toBeVisible({ timeout: 5000 });
+    
+    // New note should appear in grid
+    await expect(page.getByText(uniqueTitle)).toBeVisible({ timeout: 10000 });
+  });
+
+  test('should delete a note', async ({ page }) => {
+    // First create a note to delete
+    const uniqueTitle = `Delete Me ${Date.now()}`;
+    
+    await page.locator('.addnote').click();
+    await page.locator('.note-title').fill(uniqueTitle);
+    await page.locator('.note-content').fill('This note will be deleted');
+    await page.locator('.save-button').click();
+    
+    // Wait for note to appear
+    await expect(page.getByText(uniqueTitle)).toBeVisible({ timeout: 10000 });
+    
+    // Find the note card with our title and click its remove button
+    const noteCard = page.locator('.note-card', { has: page.getByText(uniqueTitle) });
+    await noteCard.locator('.remove-note-button').click();
+    
+    // Note should be removed
+    await expect(page.getByText(uniqueTitle)).not.toBeVisible({ timeout: 5000 });
+  });
+});
+
