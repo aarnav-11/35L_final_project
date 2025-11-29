@@ -313,3 +313,45 @@ test.describe('404 Error Page', () => {
         await expect(page.locator('body')).toBeVisible();
     });
 });
+
+////////////////////////////////////////////////////////////
+//TAGS TESTS
+////////////////////////////////////////////////////////////
+
+test.describe('Tags', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto(BASE_URL);
+      await page.getByRole('button', { name: 'Log in' }).click();
+      await page.locator('#email').fill(EXISTING_USER.email);
+      await page.locator('#password').fill(EXISTING_USER.password);
+      await page.getByRole('button', { name: 'Log in' }).click();
+      await expect(page).toHaveURL(/.*home/, { timeout: 10000 });
+    });
+  
+    test('should auto-generate tags when creating a note', async ({ page }) => {
+      // Use unique title to avoid conflicts with previous test runs
+      const uniqueId = Date.now();
+      const title = `TagTest ${uniqueId}`;
+      const content = 'Working on a neural network for image classification using Python and TensorFlow';
+      
+      await page.locator('.addnote').click();
+      await page.locator('.note-title').fill(title);
+      await page.locator('.note-content').fill(content);
+      await page.locator('.save-button').click();
+      
+      // Wait for note to appear (server waits for AI to generate tags)
+      const noteHeading = page.locator('.note-card h1', { hasText: title });
+      await expect(noteHeading).toBeVisible({ timeout: 30000 });
+      
+      // Find the note card containing our unique title
+      const noteCard = page.locator('.note-card', { has: noteHeading });
+      const tagsSection = noteCard.locator('.note-tags');
+      
+      // Tags should be visible since server waited for them
+      await expect(tagsSection).toBeVisible({ timeout: 5000 });
+      
+      // Should have at least one tag
+      const tagCount = await tagsSection.locator('.tag-body').count();
+      expect(tagCount).toBeGreaterThan(0);
+    });
+});
