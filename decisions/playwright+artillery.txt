@@ -1,1 +1,7 @@
 So i ran npx playwright codegen http://localhost:5173 and that is so cool because it auto makes test cases for you
+
+So I ran the first proper artillery test and I think the system is robust, the only stupid error I made was I still kept access to the GEMINI API which made like 250 notes and all tried to send tags which meant I ran out of credits (this wouldve been way worse if I was on a paid plan), I saved myself a lot of money lol.
+Also my pc crashed, my servers crashed and everything started overheating on the spike phase. I think the test conditions were kind of unrealistic (30 notes being created a second is insane especially when the server is my desktop)
+But it is resilient till like 15 req/sec as long as the gemini api doesnt run out (because then the API retries twice which triples the requests)
+
+Also by mistake pushed a LLM secret key to github (it was commented out)

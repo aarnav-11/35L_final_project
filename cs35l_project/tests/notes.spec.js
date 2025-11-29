@@ -95,6 +95,14 @@ test.describe('Authentication Page', () => {
 ////////////////////////////////////////////////////////////
 
 test.describe('Main Page - Notes', () => {
+  test("should give error when trying to add note without login", async ({ page }) => {
+    await page.goto(BASE_URL);
+    await page.locator('.addnote').click();
+    page.on('dialog', async dialog => {
+      expect(dialog.message()).toContain('Failed to add note, login credentials expired');
+      await dialog.accept();
+    });
+  });
   // Login before each test
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE_URL);
