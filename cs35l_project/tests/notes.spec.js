@@ -264,3 +264,40 @@ test.describe('Search', () => {
       expect(allCount).toBeGreaterThanOrEqual(filteredCount);
     });
 });
+
+////////////////////////////////////////////////////////////
+//NAVIGATION TESTS
+////////////////////////////////////////////////////////////
+
+
+test.describe('Navigation', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto(BASE_URL);
+      await page.getByRole('button', { name: 'Log in' }).click();
+      await page.locator('#email').fill(EXISTING_USER.email);
+      await page.locator('#password').fill(EXISTING_USER.password);
+      await page.getByRole('button', { name: 'Log in' }).click();
+      await expect(page).toHaveURL(/.*home/, { timeout: 10000 });
+    });
+  
+    test('should navigate to Spaces page', async ({ page }) => {
+      await page.getByRole('link', { name: 'Spaces' }).click();
+      await expect(page).toHaveURL(/.*spaces/);
+    });
+  
+    test('should navigate back to Home', async ({ page }) => {
+      await page.getByRole('link', { name: 'Spaces' }).click();
+      await expect(page).toHaveURL(/.*spaces/);
+      
+      await page.getByRole('link', { name: 'Home' }).click();
+      await expect(page).toHaveURL(/.*home/);
+    });
+  
+    test('should logout successfully', async ({ page }) => {
+      // Find and click logout button
+      await page.locator('.logout button, button:has-text("Logout"), button:has-text("Log out")').click();
+      
+      // Should redirect to login page
+      await expect(page).toHaveURL(BASE_URL, { timeout: 5000 });
+    });
+  });
