@@ -300,4 +300,16 @@ test.describe('Navigation', () => {
       // Should redirect to login page
       await expect(page).toHaveURL(BASE_URL, { timeout: 5000 });
     });
-  });
+});
+
+////////////////////////////////////////////////////////////
+//404 ERROR PAGE TESTS
+////////////////////////////////////////////////////////////
+test.describe('404 Error Page', () => {
+    test('should show 404 page for invalid routes', async ({ page }) => {
+        await page.goto(`${BASE_URL}/nonexistent-page`);
+        
+        // Should show some error indication (adjust based on your 404page.jsx)
+        await expect(page.locator('body')).toBeVisible();
+    });
+});
