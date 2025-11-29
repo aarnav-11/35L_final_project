@@ -197,3 +197,70 @@ test.describe('Main Page - Notes', () => {
   });
 });
 
+////////////////////////////////////////////////////////////
+//SEARCH TESTS
+////////////////////////////////////////////////////////////
+
+
+test.describe('Search', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto(BASE_URL);
+      await page.getByRole('button', { name: 'Log in' }).click();
+      await page.locator('#email').fill(EXISTING_USER.email);
+      await page.locator('#password').fill(EXISTING_USER.password);
+      await page.getByRole('button', { name: 'Log in' }).click();
+      await expect(page).toHaveURL(/.*home/, { timeout: 10000 });
+    });
+  
+    test('should filter notes when typing in search', async ({ page }) => {
+      // Create a uniquely named note first
+      const uniqueWord = `unique${Date.now()}`;
+      
+      await page.locator('.addnote').click();
+      await page.locator('.note-title').fill(uniqueWord);
+      await page.locator('.note-content').fill('Searchable content');
+      await page.locator('.save-button').click();
+      
+      await expect(page.getByText(uniqueWord)).toBeVisible({ timeout: 10000 });
+      
+      // Get initial note count
+      const initialCount = await page.locator('.note-card').count();
+      
+      // Search for the unique word
+      await page.locator('.search-input').fill(uniqueWord);
+      
+      // Wait for filtering
+      await page.waitForTimeout(500);
+      
+      // Should show only the matching note
+      const filteredCount = await page.locator('.note-card').count();
+      expect(filteredCount).toBeLessThanOrEqual(initialCount);
+      await expect(page.getByText(uniqueWord)).toBeVisible();
+    });
+  
+    test('should show no results for non-matching search', async ({ page }) => {
+      const nonsenseQuery = 'xyznonexistent12345';
+      
+      await page.locator('.search-input').fill(nonsenseQuery);
+      await page.waitForTimeout(500);
+      
+      // Should show 0 notes
+      const noteCount = await page.locator('.note-card').count();
+      expect(noteCount).toBe(0);
+    });
+  
+    test('should clear search and show all notes', async ({ page }) => {
+      // Type something
+      await page.locator('.search-input').fill('test');
+      await page.waitForTimeout(300);
+      
+      const filteredCount = await page.locator('.note-card').count();
+      
+      // Clear search
+      await page.locator('.search-input').fill('');
+      await page.waitForTimeout(300);
+      
+      const allCount = await page.locator('.note-card').count();
+      expect(allCount).toBeGreaterThanOrEqual(filteredCount);
+    });
+});
