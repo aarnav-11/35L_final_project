@@ -1,4 +1,5 @@
-const sessionCookie = `accessToken=${process.env.ARTILLERY_COOKIE}`;
+
+const sessionCookie = "accessToken=";
 console.log(sessionCookie);
 
 export const config = {

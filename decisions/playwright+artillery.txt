@@ -1,0 +1,1 @@
+So i ran npx playwright codegen http://localhost:5173 and that is so cool because it auto makes test cases for you
