@@ -5,3 +5,12 @@ Also my pc crashed, my servers crashed and everything started overheating on the
 But it is resilient till like 15 req/sec as long as the gemini api doesnt run out (because then the API retries twice which triples the requests)
 
 Also by mistake pushed a LLM secret key to github (it was commented out)
+
+5. Security Testing with OWASP ZAP or npm audit
+What It Tests: Vulnerabilities, dependencies
+# Check for vulnerable dependenciesnpm audit# Fix automatically where possiblenpm audit fix
+OWASP ZAP can scan your running app for:
+SQL Injection
+XSS vulnerabilities
+CSRF issues
+Insecure headers
