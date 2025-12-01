@@ -56,7 +56,7 @@ function MainPage() {
       });
 
       if (!response.ok){
-        alert('Failed to add note');
+        alert('Failed to add note, login credentials expired');
         throw new Error('Failed to add note, login credentials expired');
       }
 

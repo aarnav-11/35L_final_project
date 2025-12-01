@@ -1,0 +1,35 @@
+config:
+  target: "http://localhost:5173"
+  processor: "./artillery-playwright-functions.cjs"
+  engines:
+    playwright:
+      aggregateByName: true
+      launchOptions:
+        headless: true
+  phases:
+    - duration: 15
+      arrivalRate: 1
+      name: "Warm-up"
+    - duration: 30
+      arrivalRate: 2
+      name: "Sustained Load"  
+    - duration: 15
+      arrivalRate: 1
+      name: "Cool-down"
+
+scenarios:
+  - name: "Login and Browse"
+    engine: playwright
+    testFunction: "loginAndBrowse"
+    weight: 5
+    
+  - name: "Navigate Pages"
+    engine: playwright
+    testFunction: "navigatePages"
+    weight: 3
+    
+  - name: "Search Notes"
+    engine: playwright
+    testFunction: "searchFunctionality"
+    weight: 4
+
