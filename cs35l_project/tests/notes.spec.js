@@ -347,18 +347,20 @@ test.describe('Tags', () => {
       await page.locator('.note-content').fill(content);
       await page.locator('.save-button').click();
       
-      // Wait for note to appear (server waits for AI to generate tags)
       const noteHeading = page.locator('.note-card h1', { hasText: title });
       await expect(noteHeading).toBeVisible({ timeout: 30000 });
       
-      // Find the note card containing our unique title
-      const noteCard = page.locator('.note-card', { has: noteHeading });
+      await page.waitForTimeout(5000);
+      
+      await page.reload();
+      await page.waitForSelector('.notes-grid', { timeout: 10000 });
+      
+      const noteCard = page.locator('.note-card').filter({ hasText: title }).first();
+      await expect(noteCard).toBeVisible({ timeout: 10000 });
+      
       const tagsSection = noteCard.locator('.note-tags');
+      await expect(tagsSection).toBeVisible({ timeout: 10000 });
       
-      // Tags should be visible since server waited for them
-      await expect(tagsSection).toBeVisible({ timeout: 5000 });
-      
-      // Should have at least one tag
       const tagCount = await tagsSection.locator('.tag-body').count();
       expect(tagCount).toBeGreaterThan(0);
     });
