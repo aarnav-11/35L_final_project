@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Soft pastel background */
+/* Background */
 body {
     margin: 0;
     font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: #f5f7ff;
     color: #111827;
 }
-/* Center the big rectangle */
+/* Center the bigger rectangle */
 .auth-page {
     min-height: 100vh;
     display: flex;
@@ -84,13 +84,13 @@ body {
 .field input {
     display: block;
     width: 100%;
-    height: 44px;                      /* << flat, not chunky */
-    padding: 0 16px;                   /* only side padding */
-    border-radius: 8px;                /* small corner round */
-    border: 1px solid #d3d3d3;         /* thin grey border */
+    height: 44px;                     
+    padding: 0 16px;                   
+    border-radius: 8px;             
+    border: 1px solid #d3d3d3;         
     box-sizing: border-box;
     font-size: 16px;
-    line-height: 1;                    /* no extra vertical spacing */
+    line-height: 1;                    
     background-color: #ffffff;
     outline: none;
 }
@@ -114,7 +114,7 @@ body {
     text-transform: uppercase;
     cursor: pointer;
     color: #ffffff;
-    background-color: #6a78ff;      /* change this if you want a different solid */
+    background-color: #6a78ff;     
     box-shadow: 0 8px 22px rgba(106, 120, 255, 0.35);
     transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
 }
@@ -159,7 +159,7 @@ body {
 /* Clean, centered logo box */
 .brand-card {
     width: 100%;
-    max-width: 320px;         /* card won’t get too huge */
+    max-width: 320px;        
     padding: 32px 32px;
     background: #ffffff;
     border-radius: 28px;
@@ -172,7 +172,7 @@ body {
 
 
 
-/* Simple sparkles + bookmark icon */
+/* Simple icon */
 .brand-icon-row {
     display: flex;
     align-items: center;
