@@ -2,58 +2,144 @@
 import React, { useState } from "react";
 import "./Authentication.css";
 import { Navigate, useNavigate } from 'react-router-dom';
+import StashLogo from "../../assets/stash-logo.png";
+
+
 
 function Authentication(){
     const navigate = useNavigate();
     const [action, setAction] = useState("Sign Up");
 
-    return(
-        <div className="mainMainBox">
-            <div className="mainBox">
-                <div className="auth">
-                    <h1>{action}</h1>
-                </div>
-                <div className="authBody"> 
-                    {action === "Log In" ? <div></div> : 
-                    <div>
-                        <div>
-                            <label for="name"><h3>Name:</h3></label>
-                            <input type="text" id="name" name="name" placeholder= "Enter your name" className="name"></input>
-                        </div>
-                        <div>
-                            <label for="age"><h3>Age:</h3></label>
-                            <input type="text" id="age" name="age" placeholder= "Enter your age" className="age"></input>
-                        </div>
-                        <div>
-                            <label for="favProf"><h3>Favorite Professor:</h3></label>
-                            <input type="text" id="favProf" name="favProf" placeholder= "Enter your favorite professor" className="favProf"></input>
-                        </div>
-                    </div>
-                    }
+        return (
+        <div className="auth-page">
+            <div className="auth-panel">
+                {/* LEFT SIDE – form */}
+                <div className="auth-left">
+                    {action === "Log In" ? (
+                        <>
+                            <h1 className="auth-title">Hello There!</h1>
+                            <p className="auth-subtitle">
+                                Welcome back, you’ve been missed.
+                            </p>
 
-                    <div>
-                        <label for="email"><h3>Email:</h3></label>
-                        <input type="text" id="email" name="email" placeholder= "Enter your email" className="email"></input>
-                    </div>
-                    <div>
-                        <label for="password"><h3>Password:</h3></label>
-                        <input type="text" id="password" name="password" placeholder="Enter your password" className="password"></input>
-                    </div>
-                    {action === "Log In" ? 
-                    <div className="forgotPass">
-                        Forgot your password <button>click me!</button>
-                    </div>
-                    :<></>
-                }
+                            <div className="field">
+                                <label htmlFor="loginEmail">Email</label>
+                                <input
+                                    id="loginEmail"
+                                    type="email"
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor="loginPassword">Password</label>
+                                <input
+                                    id="loginPassword"
+                                    type="password"
+                                    placeholder="Enter your password"
+                                />
+                            </div>
+
+                            <button type="button" className="primary-action">
+                                Log In
+                            </button>
+
+                            <p className="switch-text">
+                                Don’t have an account?{" "}
+                                <button
+                                    type="button"
+                                    className="inline-link"
+                                    onClick={() => setAction("Sign Up")}
+                                >
+                                    Sign up
+                                </button>
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <h1 className="auth-title">Create an account</h1>
+                            <p className="auth-subtitle">
+                                Sign up to start saving and organizing your Stash.
+                            </p>
+
+                            <div className="field">
+                                <label htmlFor="name">Name</label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    placeholder="Enter your name"
+                                />
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor="birthday">Birthday</label>
+                                <input
+                                    id="birthday"
+                                    type="date"
+                                />
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor="email">Email</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor="password">Create password</label>
+                                <input
+                                    id="password"
+                                    type="password"
+                                    placeholder="Create a password"
+                                />
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor="confirmPassword">Confirm password</label>
+                                <input
+                                    id="confirmPassword"
+                                    type="password"
+                                    placeholder="Re-enter your password"
+                                />
+                            </div>
+
+                            <button type="button" className="primary-action">
+                                Sign Up
+                            </button>
+
+                            <p className="switch-text">
+                                Already have an account?{" "}
+                                <button
+                                    type="button"
+                                    className="inline-link"
+                                    onClick={() => setAction("Log In")}
+                                >
+                                    Log in
+                                </button>
+                            </p>
+                        </>
+                    )}
                 </div>
-                <div className="signButtons">
-                    <button onClick={ () => setAction("Sign Up")} className="signButton">Sign Up</button>
-                    <button onClick={ () => setAction("Log In")} className ="signButton">Log in</button>
-                </div>
+
+                {/* RIGHT SIDE – logo / brand area */}
+        <div className="auth-right">
+            <div className="brand-card">
+                <img 
+                    src={StashLogo} 
+                    alt="Stash logo"
+                    className="brand-logo"
+                />
             </div>
         </div>
-        
+    </div>
+</div>
+           
     );
+    
 }
+
 
 export default Authentication;
