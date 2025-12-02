@@ -1,7 +1,7 @@
 
 import "./404page.css";
 import mindBlown from "../assets/mind_blown.avif"
-
+import Tag from "../components/Tag";
 
 function ErrorPage(){
     return(

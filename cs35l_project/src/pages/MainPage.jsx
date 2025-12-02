@@ -7,8 +7,10 @@ import UploadNoteButton from "../components/UploadNoteButton"
 import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
+import LogoutButton from '../components/LogoutButton'
+import Background from '../components/Background'
 
-const API_BASE_URL = "http://localhost:3000/notes";
+const API_BASE_URL = "http://localhost:3000/api/notes";
 
 function MainPage() {
   const [notes, setNotes] = useState([]);
@@ -19,7 +21,7 @@ function MainPage() {
   const fetchNotes = async () => {
     try{
       setLoading(true);
-      const response = await fetch(API_BASE_URL);
+      const response = await fetch(API_BASE_URL, { credentials: 'include' });
       
       if (!response.ok){
         throw new Error('Failed to fetch notes');
@@ -41,7 +43,9 @@ function MainPage() {
 
   const addNote = async (title, noteText) => {
     try{
+      setError(null);
       const response = await fetch(API_BASE_URL, {
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,29 +57,30 @@ function MainPage() {
       });
 
       if (!response.ok){
-        throw new Error('Failed to add note');
+        alert('Failed to add note, login credentials expired');
+        throw new Error('Failed to add note, login credentials expired');
       }
 
       const newNote = await response.json();
-
-      //add new note to the notes array beginning
+      
       setNotes([newNote, ...notes]);
     } catch (err) {
       console.error(err);
-      alert(`Failed to add note, please try again`);
+      setError('Failed to add note, please try again');
     }
   }
 
   const removeNote = async (id) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE' });
+      setError(null);
+      const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE', credentials: 'include' });
 
       if (!res.ok) throw new Error(`Failed to delete note (${res.status})`);
       // if server returns 204, there’s no body to parse then skip res.json()
       setNotes(prev => prev.filter(n => n.id !== id));
     } catch (err) {
       console.error(err);
-      alert('Failed to delete note, please try again');
+      setError('Failed to delete note, please try again');
     }
   };
 
@@ -127,7 +132,8 @@ function MainPage() {
 
   return(
     <div className='app'>
-      <div className='navigation'>
+        <Background colors={["#9BF267", "#C6FF8A", "#7AF2FF", "#4BC8FF", "#5570FF", "#A56BFF", "#FF76D6", "#FFB470"]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
+        <div className='navigation'>
         <Navigation/>
       </div>
       <div className="header-container">

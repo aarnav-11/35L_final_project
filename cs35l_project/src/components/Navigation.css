@@ -1,12 +1,12 @@
 .navigation{
-    font-size: 1.6cap;
+    font-size: 1.7cap;
     justify-content: center;
     justify-items: center;
     padding-bottom: 0.5%;
     display: flex;
     gap: 1rem;
     text-decoration: none;
-    background-color: white;
+    padding-top: 1%;
 }
 
 .navigation a{
@@ -18,10 +18,14 @@
     transform: translateY(-1px);
 }
 
-.about:hover{
+.spaces:hover{
     transform: translateY(-1px);
 }
 
-.contact:hover{
+.login:hover{
+    transform: translateY(-1px);
+}
+
+.logout:hover{
     transform: translateY(-1px);
 }

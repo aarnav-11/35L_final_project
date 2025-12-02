@@ -1,0 +1,11 @@
+1. Signup login would not work at all (had to setup a lot of states in authentication)
+2. massive error was that everytime youd click the login or signup button it would technically submit the form and then that would mean it would start doing error checking on email and password so emial+pass would show as incorrect even when they werent even submitted.
+    -I still dont know how to fix it
+3. Chrome extensions can't directly access httpOnly cookies, so we need to either:
+    Get token from login response and store in chrome.storage
+    Use credentials: 'include' in fetch (cookies should be sent automatically for same-origin requests)
+4. when a link was added as a note it wasnt clickable so I used ai and regex scripting to: (React escapes HTML, so anchor tags in note.text rendered as plain text. The text used Markdown [text](url), but the code only matched HTML <a> tags.)
+    Update Note.jsx to parse both Markdown and HTML links and convert them to React <a> elements so they render as clickable links.
+5. My gemini key was not working and I was wondering why/ spent a lot of time trying to fix it. But I figured that passing it in frontend logic actually leaks the key so I had to pass it in the backend by making a seperate route.
+^ This was not as easy as I thought because I honestly think gemini has a bug where if I hardcode the API key it works but it just doesnt work when I use an env file.
+edit- I solved it, honestly i think it was a js side bug so I made a python file and it works (way more work than needed)
