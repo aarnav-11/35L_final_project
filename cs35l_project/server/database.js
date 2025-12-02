@@ -17,18 +17,19 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Initialize database - create table if it doesn't exist
 function initializeDatabase() {
-    const createTableQuery = `
-        //users table
+    const createUsersTableQuery = `
         CREATE TABLE IF NOT EXISTS users (
-            age INTEGER NOT NULL,
-            name TEXT NOT NULL,
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
+            name TEXT NOT NULL,
+            age INTEGER NOT NULL,
+            favProf TEXT NOT NULL,
+            email TEXT NOT NULL,
             password TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
-        //refreshtokens table
+    `
+    const createRefreshTokenTableQuery = `
         CREATE TABLE IF NOT EXISTS refreshtokens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
@@ -37,23 +38,41 @@ function initializeDatabase() {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users (id) on DELETE CASCADE
         )
-        //notes table
+    `
+    const createNotesTableQuery = `
         CREATE TABLE IF NOT EXISTS notes (
-            user_id INTEGER NOT NULL,
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
             title TEXT NOT NULL,
             text TEXT NOT NULL,
+            tags TEXT DEFAULT '[]',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users (id) on DELETE CASCADE
         )
     `;
 
-    db.run(createTableQuery, (err) => {
+    db.run(createUsersTableQuery, (err) => {
         if (err) {
             console.error("table didnt make", err.message);
         } else {
-            console.log('table ready');
+            console.log('users table ready');
+        }
+    });
+
+    db.run(createRefreshTokenTableQuery, (err) => {
+        if (err) {
+            console.error("table didnt make", err.message);
+        } else {
+            console.log('refresh tokens table ready');
+        }
+    });
+
+    db.run(createNotesTableQuery, (err) => {
+        if (err) {
+            console.error("table didnt make", err.message);
+        } else {
+            console.log('notes table ready');
         }
     });
 }
