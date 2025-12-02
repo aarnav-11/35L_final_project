@@ -155,7 +155,8 @@ router.post('/', requireAuth, async (req, res) => {
 });
 
 // method to upload notes
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", requireAuth, upload.single("file"), async (req, res) => {
+    try{
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const title = req.file.originalname;
     const fileName = `${Date.now()}-${req.file.originalname.replace(/[^a-zA-Z0-9_\-\.]/g, "_")}`;
@@ -169,13 +170,19 @@ router.post("/upload", upload.single("file"), async (req, res) => {
         console.error(error);
         return res.status(500).json({ error: "Upload failed" });
     }
-    const { data: publicURL } = supabase.storage
-      .from("notes-files")
-      .getPublicUrl(fileName);
-    const text = publicURL.publicUrl;
-    const query = 'INSERT INTO notes (title, text) VALUES (?, ?)';
-    db.run(query, [title, text], function(err){
+    const { data, error: urlError } = supabase.storage
+    .from("notes-files")
+    .getPublicUrl(fileName);
+    if (urlError) { 
+        console.error(urlError);
+        return res.status(500).json({ error: "Failed to get public URL" });
+    }
+    const text = data.publicUrl;
+    const userid = req.user.userId;
+    const query = 'INSERT INTO notes (user_id, title, text) VALUES (?, ?, ?)';
+    db.run(query, [userid, title, text], function(err){
         if (err){
+            console.error("SQLite insert error:", err);
             res.status(500).json({ error: err.message });
             return;
         }
@@ -187,6 +194,10 @@ router.post("/upload", upload.single("file"), async (req, res) => {
             updated_at: new Date().toISOString()
         });
     });
+    } catch (err) {
+        console.error("Upload route error:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 //method to open pdfs in browser

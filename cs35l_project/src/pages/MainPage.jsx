@@ -106,6 +106,7 @@ function MainPage() {
     try{
       const response = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
+        credentials: 'include',
         body: formData
       });
 
