@@ -12,6 +12,7 @@ function Navigation(){
         <nav className="navigation">
           <div className="home"><Link to="/home">Home</Link></div>
           <div className="spaces"><Link to="/spaces">Spaces</Link></div>
+          <div className="calendar"><Link to="/calendar">Calendar</Link></div>
           {!isAuthenticated ? (
             <div className="login"><Link to="/">Log In</Link></div>
           ) : (
