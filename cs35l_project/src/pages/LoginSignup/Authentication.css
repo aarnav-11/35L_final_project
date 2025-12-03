@@ -1,99 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-h1{
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: black;
-    text-align: center;
-    letter-spacing: 1px;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 2px 8px whitesmoke;
+/* Background */
+body {
+    margin: 0;
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f7ff;
+    color: #111827;
+}
+/* Center the bigger rectangle */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
 }
 
-.mainMainBox{
-    padding-left: 35%;
-    padding-top: 30px;
+/* Main panel */
+
+.auth-panel {
+    width: 840px;
+    max-width: 95vw;
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1px solid #e3e4e8;
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.10);
+    display: flex;
+    overflow: hidden;
 }
-.mainBox{
-    width: 450px;
-    height: 700px;
-    border: 1px solid black;
+
+/* ---------------------------- */
+/* LEFT SIDE — FORM SECTION     */
+/* ---------------------------- */
+
+.auth-left {
+    flex: 1.4;               
+    padding: 48px 56px;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    gap: 20px;
-    align-items: center;
-    background-color: white;
+    align-items: flex-start;
+    gap: 24px;
 }
 
-.auth{
-    padding-top: 2%;
-}
-.authBody{
-    padding-top: 0px;
-}
-
-.authBody input {
-    border: solid black 1px;
-    background-color: white;
-    padding: 1%;
-    width: 300px;
-    size: 10px;
+/* Title */
+.auth-title {
+    font-size: 2.25rem;  
+    font-weight: 700;
+    margin: 0;
 }
 
-.signButtons{
+/* Subtitle */
+.auth-subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 4px 0 0 0;
+    max-width: 380px;
+}
+
+.auth-form {
+    width: 100%;             
+    max-width: 100%;           
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 20px;
-    padding-top: 30px;
 }
 
-.forgotPass{
-    padding-top: 20px;
+/* Fields */
+
+.field {
+    width: 100%;
+    margin-bottom: 14px;            
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.signButton{
-    background: white;
-    border: none;
-    padding: 12px 32px;
-    border-radius: 10px;
-    font-size: 1rem;
+.field label {
+    font-size: 0.9rem;
     font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 12px grey;
+    color: #374151;
 }
-.signButton:hover{
-    background: whitesmoke;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px grey;
+
+.field input {
+    display: block;
+    width: 100%;
+    height: 44px;                     
+    padding: 0 16px;                   
+    border-radius: 8px;             
+    border: 1px solid #d3d3d3;         
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 1;                    
+    background-color: #ffffff;
+    outline: none;
 }
-.forgotPass button{
-    background-color: none;
+
+
+.field input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.25);
+}
+
+/* CTA button */
+.primary-action {
+    margin-top: 18px;
+    width: 100%;
+    border-radius: 999px;
     border: none;
-    font-family:'Times New Roman', Times, serif;
-    font-size: medium;
+    padding: 13px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     cursor: pointer;
-    color: blue;
+    color: #ffffff;
+    background-color: #6a78ff;     
+    box-shadow: 0 8px 22px rgba(106, 120, 255, 0.35);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+
+.primary-action:hover {
+    background-color: #5b6af2;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(106, 120, 255, 0.45);
+}
+
+/* Switch text */
+.switch-text {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+.inline-link {
+    border: none;
+    background: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #111827;
     text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+}
+/* ---------------------------- */
+/* RIGHT SIDE — LOGO PANEL      */
+/* ---------------------------- */
+
+
+.auth-right {
+    flex: 1.2;               
+    background: #faf6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 56px;       
 }
 
-.error{
-    color: red;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 1rem;
+
+/* Clean, centered logo box */
+.brand-card {
+    width: 100%;
+    max-width: 320px;        
+    padding: 32px 32px;
+    background: #ffffff;
+    border-radius: 28px;
+    border: none;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* .username{
-    border: solid black 1px;
-    background-color: white;
-    padding: 2%;
-    width: 300px;
+
+
+/* Simple icon */
+.brand-icon-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
-.password{
-    border: solid black 1px;
-    background-color: white;
-    padding: 2%;
-    width: 300px;
-} */
+
+.brand-star {
+    font-size: 1.2rem;
+    color: #8da2fb;
+}
+
+.brand-mark {
+    width: 20px;
+    height: 28px;
+    border: 2px solid #8da2fb;
+    border-bottom: none;
+    border-radius: 4px;
+    position: relative;
+}
+
+.brand-mark::after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top: 12px solid #8da2fb;
+}
+
+/* “Stash” text */
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #6366f1;
+    margin-top: 4px;
+}
+
+.brand-logo {
+    width: 100%;
+    max-width: 240px;        
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.error {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+

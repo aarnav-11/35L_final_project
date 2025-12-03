@@ -38,36 +38,46 @@ function passwordCheck(password){
 }
 
 router.post('/signup', (req, res) => {
-    const {name, age, favProf, email, password} = req.body;
+    // safely pull values from body
+    let { name, age, favProf, email, password } = req.body || {};
+
+    // null-safe trim: if undefined/null → "" then trim
+    name = (name ?? "").trim();
+    age = (age ?? "").trim();
+    email = (email ?? "").trim();
+    password = (password ?? "").trim();
+    favProf = (favProf ?? "").trim();  // optional, will default later
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; //regex for email validation
 
-    if(name.trim() === ""){
+    if (!name) {
         return res.status(400).send("Your name cannot be empty");
     }
-    if(age.trim() === ""){
+    if (!age) {
         return res.status(400).send("Your age cannot be empty");
     }
-    if(favProf.trim() === ""){
-        return res.status(400).send("Your security question cannot be empty");
-    }
-    if(email.trim() === ""){
+    if (!email) {
         return res.status(400).send("Your email cannot be empty");
     }
-    if(password.trim() === ""){
+    if (!password) {
         return res.status(400).send("Your password cannot be empty");
     }
 
-    const ageNum = Number(age.trim());
-    if (isNaN(Number(age))) {
+    // favProf is OPTIONAL now – if not provided, store a placeholder
+    if (!favProf) {
+        favProf = "N/A";
+    }
+
+    const ageNum = Number(age);
+    if (Number.isNaN(ageNum)) {
         return res.status(400).send("Age must be a number");
     }
-    if (age.trim() <= 8 || age.trim() >= 100){
-        return res.status(400).send("Please enter a valid age(9-99)");
+    if (ageNum <= 8 || ageNum >= 100){
+        return res.status(400).send("Please enter a valid age (9–99)");
     }
 
     if (!emailRegex.test(email)){ 
-        return res.status(400).send("Please enter a valid email address")
+        return res.status(400).send("Please enter a valid email address");
     }
 
     const passwordResult = passwordCheck(password);
@@ -84,6 +94,7 @@ router.post('/signup', (req, res) => {
         if (row){
             return res.status(409).send("User already exists please log in instead");
         }
+
         //hash password
         const hashedPassword = bcrypt.hashSync(password, 10);
 
@@ -104,9 +115,18 @@ router.post('/signup', (req, res) => {
             storeRefreshToken(userId, refreshToken);
 
             //set cookies
-
-            res.cookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
-            res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true, maxAge: 3600000 });
+            res.cookie("accessToken", accessToken, { 
+                httpOnly: true, 
+                secure: process.env.NODE_ENV === 'production', 
+                sameSite: 'strict',
+                maxAge: 15 * 60 * 1000 // 15 minutes
+            });
+            res.cookie("refreshToken", refreshToken, { 
+                httpOnly: true, 
+                secure: process.env.NODE_ENV === 'production', 
+                sameSite: 'strict',
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
 
             return res.status(201).json({
                 sucess: true,
@@ -134,8 +154,12 @@ router.post('/signup', (req, res) => {
 7. return a success
 */
 router.post("/login", (req, res) => {
-    const {email, password} = req.body;
+    const {email, password} = req.body || {};
 
+    if (!email || !password) {
+        return res.status(400).send("Email and password are required");
+    }
+    
     const emailQuery = 'SELECT * FROM users WHERE email = ?';
     db.get(emailQuery, [email], function(err, user){
         if (err){
