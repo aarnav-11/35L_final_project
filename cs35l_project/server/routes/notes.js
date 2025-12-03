@@ -180,20 +180,65 @@ router.post("/upload", requireAuth, upload.single("file"), async (req, res) => {
     const text = data.publicUrl;
     const userid = req.user.userId;
     const query = 'INSERT INTO notes (user_id, title, text) VALUES (?, ?, ?)';
-    db.run(query, [userid, title, text], function(err){
-        if (err){
+    db.run(query, [userid, title, text], function (err) {
+        if (err) {
             console.error("SQLite insert error:", err);
-            res.status(500).json({ error: err.message });
-            return;
+            return res.status(500).json({ error: err.message });
         }
-        res.status(201).json({
-            id: this.lastID,
-            title,
-            text,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-        });
+    
+        const noteId = this.lastID;
+        (async () => {
+            try {
+                const pythonScriptPath = path.join(__dirname, '..', 'tags.py');
+                const inputData = JSON.stringify({
+                    title: title,
+                    text: title
+                });
+                const pythonProcess = spawn('python3', [pythonScriptPath]);
+                let stdout = "";
+                let stderr = "";
+                pythonProcess.stdout.on("data", data => stdout += data.toString());
+                pythonProcess.stderr.on("data", data => stderr += data.toString());
+                pythonProcess.stdin.write(inputData);
+                pythonProcess.stdin.end();
+                await new Promise((resolve, reject) => {
+                    pythonProcess.on("close", code => {
+                        code !== 0 ? reject(stderr) : resolve();
+                    });
+                });
+                let tagsArray = [];
+                try {
+                    const result = JSON.parse(stdout);
+                    if (result.tags) tagsArray = result.tags;
+                } catch (e) {
+                    console.error("Tag parse error:", e);
+                }
+                const tagsJson = JSON.stringify(tagsArray);
+                const updateQuery =
+                    "UPDATE notes SET tags = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+                db.run(updateQuery, [tagsJson, noteId]);
+                return res.status(201).json({
+                    id: noteId,
+                    title,
+                    text,
+                    tags: tagsArray,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+            } catch (tagErr) {
+                console.error("PDF tag generation failed:", tagErr);
+                return res.status(201).json({
+                    id: noteId,
+                    title,
+                    text,
+                    tags: [],
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+            }
+        })();
     });
+    
     } catch (err) {
         console.error("Upload route error:", err);
         res.status(500).json({ error: "Internal server error" });
