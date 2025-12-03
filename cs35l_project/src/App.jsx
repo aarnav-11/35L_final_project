@@ -12,6 +12,7 @@ function App() {
       <Route path='/home' element = { <MainPage/> }/>
       <Route path="/spaces" element = { < Spaces />}/>
       <Route path = "*" element = { <ErrorPage/> }/>
+      <Route path="/calendar" element={<CalendarPage />} />
     </Routes>
   );
 }
