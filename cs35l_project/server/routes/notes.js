@@ -1,7 +1,18 @@
 
+const multer = require("multer");
+const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_KEY
+);
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
+const fetch = require('node-fetch');
+
+const API_BASE_URL = "http://localhost:3000/notes";
 const { requireAuth } = require('../middleware/auth');
 
 //get method to get all notes
@@ -142,6 +153,78 @@ router.post('/', requireAuth, async (req, res) => {
         })();
     });
 });
+
+// method to upload notes
+router.post("/upload", requireAuth, upload.single("file"), async (req, res) => {
+    try{
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+    const title = req.file.originalname;
+    const fileName = `${Date.now()}-${req.file.originalname.replace(/[^a-zA-Z0-9_\-\.]/g, "_")}`;
+    const {error} = await supabase.storage
+      .from("notes-files")
+      .upload(fileName, req.file.buffer, {
+        contentType: req.file.mimetype,
+        //contentType: "application/pdf",
+      });
+    if (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Upload failed" });
+    }
+    const { data, error: urlError } = supabase.storage
+    .from("notes-files")
+    .getPublicUrl(fileName);
+    if (urlError) { 
+        console.error(urlError);
+        return res.status(500).json({ error: "Failed to get public URL" });
+    }
+    const text = data.publicUrl;
+    const userid = req.user.userId;
+    const query = 'INSERT INTO notes (user_id, title, text) VALUES (?, ?, ?)';
+    db.run(query, [userid, title, text], function(err){
+        if (err){
+            console.error("SQLite insert error:", err);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.status(201).json({
+            id: this.lastID,
+            title,
+            text,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        });
+    });
+    } catch (err) {
+        console.error("Upload route error:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+//method to open pdfs in browser
+router.get('/file/:filename', async (req, res) => {
+    try{
+        const { filename } = req.params;
+        const { data, error: signedUrlError } = await supabase
+        .storage
+        .from('notes-files') 
+        .createSignedUrl(filename, 60);
+        if (signedUrlError) {
+        console.error(signedUrlError);
+        return res.status(500).send('Error generating file URL');
+        }
+        const fileResponse = await fetch(data.signedUrl);
+        if (!fileResponse.ok) {
+        return res.status(404).send('File not found');
+        }
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="${filename}"`); 
+        fileResponse.body.pipe(res);
+    }
+    catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+  });
 
 //method to delete notes
 router.delete("/:id", requireAuth, (req, res) => {

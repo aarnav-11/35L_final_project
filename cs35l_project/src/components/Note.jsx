@@ -111,7 +111,22 @@ function Note({ note, onRemoveNote }){
                 <RemoveNoteButton onRemoveNote={onRemoveNote} />
                 <h1>{note.title || "Untitled Thought"}</h1>
             </div>
-            <p className="note-text">{renderText(note.text)}</p>
+            {/* if note is uploaded file show link, otherwise show text */}
+            {note.text && (note.text.startsWith("http://") || note.text.startsWith("https://")) ? (
+                // <a 
+                //     href={note.text} 
+                //     target="_blank" 
+                //     rel="noopener noreferrer"
+                //     style={{ color: "blue", textDecoration: "underline" }}
+                // >
+                //     Open Uploaded File
+                // </a>
+                <a href={note.text} target="_blank" rel="noopener noreferrer">
+                    Click to Open
+                </a>
+            ) : (
+                <p className="note-text">{renderText(note.text)}</p>
+            )}
             {tags.length > 0 && (
                 <div className="note-tags">
                     {tags.map((tag, index) => (
