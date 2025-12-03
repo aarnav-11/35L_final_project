@@ -204,23 +204,27 @@ router.post("/upload", requireAuth, upload.single("file"), async (req, res) => {
 router.get('/file/:filename', async (req, res) => {
     try{
         const { filename } = req.params;
-        const { data, error: signedUrlError } = await supabase
-        .storage
-        .from('notes-files') 
-        .createSignedUrl(filename, 60);
-        if (signedUrlError) {
-        console.error(signedUrlError);
-        return res.status(500).send('Error generating file URL');
+        const { data, error } = await supabase
+            .storage
+            .from('notes-files') 
+            .download(filename);
+        if (error || !data) {
+            console.error(error);
+            return res.status(404).send('File not found');
         }
-        const fileResponse = await fetch(data.signedUrl);
-        if (!fileResponse.ok) {
-        return res.status(404).send('File not found');
-        }
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `inline; filename="${filename}"`); 
-        fileResponse.body.pipe(res);
-    }
-    catch (err) {
+        const mimeType = data.type || 'application/octet-stream';
+        res.setHeader('Content-Type', mimeType);
+        const inlineTypes = [
+            'application/pdf',
+            'image/png',
+            'image/jpeg',
+            'text/plain',
+            'text/html'
+          ];
+        const disposition = inlineTypes.includes(mimeType) ? 'inline' : 'attachment';
+        res.setHeader('Content-Disposition', `${disposition}; filename="${filename}"`);
+        data.body.pipe(res);
+    }catch (err) {
     console.error(err);
     res.status(500).send('Internal server error');
   }

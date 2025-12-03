@@ -109,7 +109,12 @@ function Note({ note, onRemoveNote }){
         <div className="note-card">
             <div className="note-header">
                 <RemoveNoteButton onRemoveNote={onRemoveNote} />
-                <h1>{note.title || "Untitled Thought"}</h1>
+                <h1>
+                    {note.text && (note.text.startsWith("http://") || note.text.startsWith("https://"))
+                    ? note.title.replace(/\.[^/.]+$/, "")
+                    : note.title || "Untitled Thought"}
+                </h1>
+
             </div>
             {/* if note is uploaded file show link, otherwise show text */}
             {note.text && (note.text.startsWith("http://") || note.text.startsWith("https://")) ? (
