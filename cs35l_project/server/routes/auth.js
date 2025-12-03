@@ -219,8 +219,8 @@ router.post("/refresh", (req, res) => {
         return res.status(401).send("Refresh token not found");
     }
 
-    const decoded = verifyToken(refreshToken);
-    if (!decoded || decoded.type !== 'refresh') {
+    const decodedToken = verifyToken(refreshToken);
+    if (!decodedToken || decodedToken.type !== 'refresh') {
         return res.status(401).send("Invalid refresh token");
     }
 
@@ -241,7 +241,7 @@ router.post("/refresh", (req, res) => {
         }
 
         // Generate new access token and set cookie
-        const newAccessToken = generateAccessToken(decoded.userId, decoded.email);
+        const newAccessToken = generateAccessToken(decodedToken.userId, decodedToken.email);
         res.cookie("accessToken", newAccessToken, { httpOnly: true, secure: true, maxAge: 3600000 });
 
         return res.status(200).json({ success: true, accessToken: newAccessToken });
