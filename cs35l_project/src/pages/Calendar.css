@@ -1,3 +1,13 @@
+.title{
+    justify-content: center;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    opacity: 0.6;
+    padding-left: 2%;
+    font-size: 4rem;
+}
+
 .react-calendar {
     width: 80vw;
     max-width: 1000px;
@@ -20,13 +30,13 @@
   }
   
   .react-calendar__tile--now {
-    background: #ffe3ec !important;
+    background: #FFDBBB !important;
     border-radius: 8px;
     color: #333;
   }
   
   .react-calendar__tile--active {
-    background: lightpink !important;
+    background: orange !important;
     border-radius: 8px;
   }
   
@@ -35,6 +45,7 @@
     gap: 40px;
     align-items: flex-start;
     margin-top: 20px;
+    justify-content: center;
   }
   
   .reminder-section {
@@ -58,7 +69,7 @@
   }
   
   .reminder-input button {
-    background-color: pink;
+    background-color: orange;
     color: black;
     border: none;
     border-radius: 8px;
@@ -67,7 +78,7 @@
   }
   
   .reminder-input button:hover {
-    background-color: lightpink;
+    background-color: #FF8C00;
   }
   
   .reminder-list {
@@ -80,7 +91,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #FFD1DC;
+    background: #FFD580;
     border-radius: 6px;
     padding: 6px 10px;
     margin-bottom: 5px;
@@ -115,7 +126,7 @@
   }
   
   .tile-reminder {
-    background: #ffd1dc;
+    background: #FFD580;
     padding: 2px;
     border-radius: 6px;
     overflow: hidden;
@@ -126,10 +137,11 @@
     margin-bottom: 15px;
     display: flex;
     justify-content: flex-start;
+    padding-left: 48px;
   }
   
   .upload-btn {
-    background-color: pink;
+    background-color: orange;
     color: black;
     padding: 10px 18px;
     border-radius: 8px;
@@ -141,12 +153,12 @@
   }
   
   .upload-btn:hover {
-    background-color: pink;
+    background-color: #FF8C00;
     transform: translateY(-1px);
   }
   
   .upload-btn:active {
-    background-color: pink; 
+    background-color: orange; 
     transform: translateY(1px);
   }
   
