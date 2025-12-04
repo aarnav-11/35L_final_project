@@ -305,4 +305,51 @@ router.get("/me", (req, res) => {
     });
 })
 
+//later additions for forgot password feature
+
+//verifies the users using the security answers from the signup page
+router.post("/verify-user", (req, res) => {
+    const { email, age, favProf } = req.body;
+    if (!email || !age || !favProf) {
+      return res.status(400).send("All fields are required");
+    }
+    const query = `SELECT * FROM users WHERE email = ? AND age = ? AND favProf = ?`;
+    db.get(query, [email, age, favProf], function (err, user) {
+      if (err) return res.status(500).send(err.message);
+      if (!user) return res.status(401).send("Information does not match our records");
+      const resetToken = generateAccessToken(user.id, user.email);
+      return res.status(200).json({ success: true, resetToken });
+    });
+  });
+  
+  //resets password using token from the user verifcation
+  router.post("/reset-password", (req, res) => {
+    const { newPassword, resetToken } = req.body;
+    const decoded = verifyToken(resetToken);
+    if (!decoded) return res.status(401).send("Invalid or expired token");
+    const passwordResult = passwordCheck(newPassword);
+    if (passwordResult !== true) {
+      return res.status(400).send(passwordResult);
+    }
+    //const hashedPassword = bcrypt.hash(newPassword, 10);
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    const query = `UPDATE users SET password = ? WHERE id = ?`;
+    db.run(query, [hashedPassword, decoded.userId], function (err) {
+      if (err) return res.status(500).send(err.message);
+      return res.status(200).json({ success: true, message: "Password updated successfully" });
+    });
+  });
+
+  //double check email exists?
+  router.post("/check-email", (req, res) => {
+    const { email } = req.body;
+    const query = `SELECT id FROM users WHERE email = ?`;
+    db.get(query, [email], function (err, row) {
+      if (err) return res.status(500).send(err.message);
+      if (!row) return res.status(404).send("Email not found");
+      return res.status(200).json({ exists: true });
+    });
+  });
+  
+  
 module.exports = router;

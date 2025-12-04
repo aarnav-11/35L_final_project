@@ -93,11 +93,16 @@ function Authentication(){
                         <input type="password" id="password" name="password" placeholder="Enter your password" className="password" value = {password} onChange = {(e) => setPassword(e.target.value)}></input>
                     </div>
                     {action === "Log In" ? 
-                    <div className="forgotPass">
-                        Forgot your password <button>click me!</button>
-                    </div>
-                    :<></>
-                }
+                        <div className="forgotPass">
+                            Forgot your password?{" "}
+                            <button
+                                type="button"
+                                onClick={() => navigate("/forgot-password")}
+                            >
+                                Click me!
+                            </button>
+                        </div>
+                    : null}
                 </div>
                 <div className="signButtons">
                     <button  onClick={ () => setAction("Sign Up")} className="signButton">Sign Up</button>
