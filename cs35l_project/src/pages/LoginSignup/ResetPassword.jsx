@@ -36,7 +36,9 @@ function ResetPassword() {
         <form onSubmit={handleSubmit}>
           <label><h3>New Password:</h3></label>
           <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} />
-          <button type="submit">Reset Password</button>
+          <button type="submit" className="signButton">
+            Reset Password
+        </button>
         </form>
       </div>
     </div>

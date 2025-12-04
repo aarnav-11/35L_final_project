@@ -15,13 +15,13 @@ function ForgotPassword() {
     setError("");
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/api/auth/verify-user", {
+      const res = await fetch("http://localhost:3000/api/auth/verify-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, age, favProf }),
       });
-      if (!response.ok) throw new Error(await response.text());
-      const data = await response.json();
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
       navigate(`/reset-password?token=${data.resetToken}`);
     } catch (err) {
       setError(err.message);
@@ -37,18 +37,34 @@ function ForgotPassword() {
         {error && <div className="error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <label><h3>Email:</h3></label>
-          <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+          <input
+            type="email"
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
+          />
           <label><h3>Age:</h3></label>
-          <input type="text" value={age} onChange={(e)=>setAge(e.target.value)} />
+          <input
+            type="text"
+            value={age}
+            onChange={(e)=>setAge(e.target.value)}
+          />
           <label><h3>Favorite Professor:</h3></label>
-          <input type="text" value={favProf} onChange={(e)=>setFavProf(e.target.value)} />
-          <button type="submit" disabled={loading}>
+          <input
+            type="text"
+            value={favProf}
+            onChange={(e)=>setFavProf(e.target.value)}
+          />
+          <button type="submit" className="signButton" disabled={loading}>
             {loading ? "Verifying..." : "Continue"}
           </button>
+          <button
+            type="button"
+            className="backButton"
+            onClick={() => navigate("/")}
+          >
+            Back to Login
+          </button>
         </form>
-        <button className="secondaryBtn" onClick={() => navigate("/")}>
-          Back to Login
-        </button>
       </div>
     </div>
   );
