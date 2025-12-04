@@ -165,3 +165,16 @@
   .upload-btn input {
     display: none;
   }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    margin-left: auto;
+  }
+  
+  .delete-btn:hover {
+    color: #FF8C00;
+  }

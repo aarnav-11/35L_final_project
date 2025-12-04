@@ -83,6 +83,37 @@ function CalendarPage() {
       .catch((e) => console.error("Error toggling reminder:", e));
   };
 
+  const handleDeleteReminder = async (reminderId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Update UI immediately
+    setReminders((prev) => {
+      const updated = {};
+      const idToDelete = Number(reminderId);
+      for (const date in prev) {
+        updated[date] = prev[date].filter((r) => Number(r.id) !== idToDelete);
+      }
+      return updated;
+    });
+    
+    // Try to delete from backend
+    try {
+      const res = await fetch(`http://localhost:3000/api/calendar/${reminderId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      
+      if (!res.ok) {
+        console.error(`Backend delete failed: ${res.status} ${res.statusText}`);
+      } else {
+        console.log("Reminder deleted from database");
+      }
+    } catch (err) {
+      console.error("Backend delete error:", err);
+    }
+  };
+
   // File Upload Handler (ICS or JSON)
   // Push uploaded events to backend
   const handleFileUpload = async (event) => {
@@ -101,6 +132,7 @@ function CalendarPage() {
         return;
       }
     }
+
 
     // ICS FILE
     else if (file.name.endsWith(".ics")) {
@@ -213,6 +245,13 @@ function CalendarPage() {
                   onChange={() => toggleReminder(r.id)}
                 />
                 <span>{r.text}</span>
+                <button
+                  className="delete-btn"
+                  onClick={(e) => handleDeleteReminder(r.id, e)}
+                  type="button"
+                >
+                  ×
+                </button>
               </li>
             ))}
           </ul>
