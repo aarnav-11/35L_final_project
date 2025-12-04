@@ -31,7 +31,3 @@ dist-ssr
 /playwright/.auth/
 
 test-results/
-
-# Database files
-server/notes.db
-**/server/notes.db
