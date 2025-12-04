@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Calendar.css";
 import ICAL from "ical.js";
-import Navigation from '../components/Navigation'
+import Navigation from "../components/Navigation";
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
@@ -12,47 +12,97 @@ function CalendarPage() {
 
   const formattedDate = date.toDateString();
 
+  // Load reminders from backend on page load
+  useEffect(() => {
+    fetch("http://localhost:3000/api/calendar", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((rows) => {
+        const grouped = {};
+        rows.forEach((r) => {
+          const key = new Date(r.date).toDateString();
+          if (!grouped[key]) grouped[key] = [];
+          grouped[key].push({
+            id: r.id,
+            text: r.text,
+            done: r.done,
+          });
+        });
+        setReminders(grouped);
+      })
+      .catch((e) => console.error("Error loading reminders:", e));
+  }, []);
+
+  // Add reminder (POST to backend)
   const handleAddReminder = () => {
     if (!inputValue.trim()) return;
 
-    setReminders((prev) => ({
-      ...prev,
-      [formattedDate]: [
-        ...(prev[formattedDate] || []),
-        { text: inputValue, done: false },
-      ],
-    }));
-
-    setInputValue("");
+    fetch("http://localhost:3000/api/calendar", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date: formattedDate, text: inputValue }),
+    })
+      .then((res) => res.json())
+      .then((newReminder) => {
+        setReminders((prev) => ({
+          ...prev,
+          [formattedDate]: [
+            ...(prev[formattedDate] || []),
+            {
+              id: newReminder.id,
+              text: newReminder.text,
+              done: newReminder.done,
+            },
+          ],
+        }));
+        setInputValue("");
+      })
+      .catch((e) => console.error("Error adding reminder:", e));
   };
 
-  const toggleReminder = (index) => {
-    setReminders((prev) => ({
-      ...prev,
-      [formattedDate]: prev[formattedDate].map((item, i) =>
-        i === index ? { ...item, done: !item.done } : item
-      ),
-    }));
+  // Toggle Done Status (PATCH to backend)
+  const toggleReminder = (reminderId) => {
+    fetch(`http://localhost:3000/api/calendar/${reminderId}/toggle`, {
+      method: "PATCH",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((updated) => {
+        setReminders((prev) => {
+          const day = formattedDate;
+          return {
+            ...prev,
+            [day]: prev[day].map((r) =>
+              r.id === reminderId ? { ...r, done: updated.done } : r
+            ),
+          };
+        });
+      })
+      .catch((e) => console.error("Error toggling reminder:", e));
   };
 
+  // File Upload Handler (ICS or JSON)
+  // Push uploaded events to backend
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
     const text = await file.text();
-
     let parsedEvents = [];
 
+    // JSON FILE
     if (file.name.endsWith(".json")) {
       try {
-        const json = JSON.parse(text);
-        parsedEvents = json;
-      } catch (e) {
+        parsedEvents = JSON.parse(text);
+      } catch {
         alert("Invalid JSON file.");
         return;
       }
     }
 
+    // ICS FILE
     else if (file.name.endsWith(".ics")) {
       try {
         const jcal = ICAL.parse(text);
@@ -61,13 +111,12 @@ function CalendarPage() {
 
         parsedEvents = vevents.map((ve) => {
           const ev = new ICAL.Event(ve);
-
           return {
-            date: ev.startDate.toString().substring(0, 15), // e.g. "Mon Feb 17 2025"
+            date: new Date(ev.startDate.toJSDate()).toDateString(),
             text: ev.summary,
           };
         });
-      } catch (e) {
+      } catch {
         alert("Invalid ICS file.");
         return;
       }
@@ -76,51 +125,61 @@ function CalendarPage() {
       return;
     }
 
-    setReminders((prev) => {
-      const newReminders = { ...prev };
-
-      parsedEvents.forEach((ev) => {
-        const key = new Date(ev.date).toDateString();
-
-        if (!newReminders[key]) newReminders[key] = [];
-        newReminders[key].push({ text: ev.text, done: false });
+    //Push each event into backend
+    parsedEvents.forEach(async (ev) => {
+      const res = await fetch("http://localhost:3000/api/calendar", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ev),
       });
-      return newReminders;
+
+      const saved = await res.json();
+
+      setReminders((prev) => {
+        const key = ev.date;
+        return {
+          ...prev,
+          [key]: [
+            ...(prev[key] || []),
+            { id: saved.id, text: saved.text, done: saved.done },
+          ],
+        };
+      });
     });
   };
 
   return (
     <div className="calendar-page">
-      <Navigation>
-      <h1>My Calendar</h1>
+      <Navigation />
+      <h1 className="title">My Calendar</h1>
 
+      {/* Upload Button */}
       <div className="upload-wrapper">
         <label className="upload-btn">
-        Upload Calendar
-    <input 
-        type="file" 
-        accept=".json,.ics"
-        onChange={handleFileUpload}
-        />
-      </label>
-    </div>
+          Upload Calendar
+          <input
+            type="file"
+            accept=".json,.ics"
+            onChange={handleFileUpload}
+            hidden
+          />
+        </label>
+      </div>
 
       <div className="calendar-layout">
+        {/* Calendar Display */}
         <Calendar
           onChange={setDate}
           value={date}
           tileContent={({ date }) => {
             const key = date.toDateString();
             const dayReminders = reminders[key] || [];
-
             if (dayReminders.length === 0) return null;
 
             return (
               <div className="tile-reminders">
-                <div className="tile-reminder">
-                  {dayReminders[0].text}
-                </div>
-
+                <div className="tile-reminder">{dayReminders[0].text}</div>
                 {dayReminders.length > 1 && (
                   <div className="tile-reminder more">
                     +{dayReminders.length - 1} more
@@ -131,6 +190,7 @@ function CalendarPage() {
           }}
         />
 
+        {/* Reminders Section */}
         <div className="reminder-section">
           <h2>{formattedDate}</h2>
 
@@ -145,12 +205,12 @@ function CalendarPage() {
           </div>
 
           <ul className="reminder-list">
-            {(reminders[formattedDate] || []).map((r, i) => (
-              <li key={i} className={r.done ? "done" : ""}>
+            {(reminders[formattedDate] || []).map((r) => (
+              <li key={r.id} className={r.done ? "done" : ""}>
                 <input
                   type="checkbox"
                   checked={r.done}
-                  onChange={() => toggleReminder(i)}
+                  onChange={() => toggleReminder(r.id)}
                 />
                 <span>{r.text}</span>
               </li>
@@ -158,7 +218,6 @@ function CalendarPage() {
           </ul>
         </div>
       </div>
-      </Navigation>
     </div>
   );
 }

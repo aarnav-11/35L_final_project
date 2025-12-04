@@ -4,6 +4,7 @@ import ErrorPage from './pages/404page';
 import Authentication from "./pages/LoginSignup/Authentication"
 import { Routes, Route } from 'react-router-dom';
 import Spaces from './pages/Spaces';
+import CalendarPage from "./pages/Calendar";
 
 function App() {
   return(
