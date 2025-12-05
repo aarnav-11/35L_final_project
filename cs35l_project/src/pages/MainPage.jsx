@@ -1,14 +1,11 @@
-
-import { useState } from 'react'
-import './MainPage.css'
-import Searchbar from '../components/Searchbar'
-import AddNoteButton from "../components/AddNoteButton"
-import UploadNoteButton from "../components/UploadNoteButton"
-import Note from "../components/Note"
-import { useEffect } from "react";
-import Navigation from '../components/Navigation'
-import LogoutButton from '../components/LogoutButton'
-import Background from '../components/Background'
+import { useState, useEffect } from 'react';
+import './MainPage.css';
+import Searchbar from '../components/Searchbar';
+import AddNoteButton from "../components/AddNoteButton";
+import UploadNoteButton from "../components/UploadNoteButton";
+import Note from "../components/Note";
+import Navigation from '../components/Navigation';
+import Background from '../components/Background';
 
 const API_BASE_URL = "http://localhost:3000/api/notes";
 
@@ -17,32 +14,32 @@ function MainPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  //fetch notes from db
+
+  // fetch notes from db
   const fetchNotes = async () => {
-    try{
+    try {
       setLoading(true);
       const response = await fetch(API_BASE_URL, { credentials: 'include' });
-      
-      if (!response.ok){
+
+      if (!response.ok) {
         throw new Error('Failed to fetch notes');
       }
 
       const data = await response.json();
       setNotes(data);
       setLoading(false);
-
     } catch (err) {
       setError(err.message);
       setLoading(false);
     }
-  }
+  };
 
-    useEffect(() => {
-      fetchNotes();
-    }, []);
+  useEffect(() => {
+    fetchNotes();
+  }, []);
 
   const addNote = async (title, noteText) => {
-    try{
+    try {
       setError(null);
       const response = await fetch(API_BASE_URL, {
         credentials: 'include',
@@ -51,33 +48,35 @@ function MainPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: title || "Untitled Thought", 
-          text: noteText
-        })
+          title: title || "Untitled Thought",
+          text: noteText,
+        }),
       });
 
-      if (!response.ok){
+      if (!response.ok) {
         alert('Failed to add note, login credentials expired');
         throw new Error('Failed to add note, login credentials expired');
       }
 
       const newNote = await response.json();
-      
-      setNotes([newNote, ...notes]);
+      setNotes((prev) => [newNote, ...prev]);
     } catch (err) {
       console.error(err);
       setError('Failed to add note, please try again');
     }
-  }
+  };
 
   const removeNote = async (id) => {
     try {
       setError(null);
-      const res = await fetch(`${API_BASE_URL}/${id}`, { method: 'DELETE', credentials: 'include' });
+      const res = await fetch(`${API_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
 
       if (!res.ok) throw new Error(`Failed to delete note (${res.status})`);
-      // if server returns 204, there’s no body to parse then skip res.json()
-      setNotes(prev => prev.filter(n => n.id !== id));
+
+      setNotes((prev) => prev.filter((n) => n.id !== id));
     } catch (err) {
       console.error(err);
       setError('Failed to delete note, please try again');
@@ -85,38 +84,21 @@ function MainPage() {
   };
 
   const uploadNote = async (file) => {
-    // try{
-    //   setLoading(true);
-    //   const response = await fetch(API_BASE_URL);
-      
-    //   if (!response.ok){
-    //     throw new Error('Failed to fetch notes');
-    //   }
-
-    //   const data = await response.json();
-    //   uploadNote(data);
-    //   setLoading(false);
-
-    // } catch (err) {
-    //   setError(err.message);
-    //   setLoading(false);
-    // }
     const formData = new FormData();
     formData.append("file", file);
-    try{
+    try {
       const response = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
         credentials: 'include',
-        body: formData
+        body: formData,
       });
 
-      if (!response.ok){
+      if (!response.ok) {
         throw new Error('Failed to upload note');
       }
 
       const newNote = await response.json();
-
-      setNotes([newNote, ...notes]);
+      setNotes((prev) => [newNote, ...prev]);
     } catch (err) {
       console.error(err);
       alert(`Failed to upload note, please try again`);
@@ -125,26 +107,58 @@ function MainPage() {
 
   const q = searchQuery.toLowerCase();
   const filteredNotes = q
-    ? notes.filter(n =>
-        (n.title && n.title.toLowerCase().includes(q)) ||
-        (n.text && n.text.toLowerCase().includes(q))
+    ? notes.filter(
+        (n) =>
+          (n.title && n.title.toLowerCase().includes(q)) ||
+          (n.text && n.text.toLowerCase().includes(q)) ||
+          (Array.isArray(n.tags) &&
+            n.tags.some((t) => t.toLowerCase().includes(q)))
       )
     : notes;
 
-  return(
-    <div className='app'>
-        <Background colors={["#9BF267", "#C6FF8A", "#7AF2FF", "#4BC8FF", "#5570FF", "#A56BFF", "#FF76D6", "#FFB470"]} rotation={30} speed={0.3} scale={1.2} frequency={1.4} warpStrength={1.2} mouseInfluence={0.8} parallax={0.6} noise={0.08} transparent/>
-        <div className='navigation'>
-        <Navigation/>
+  return (
+    <div className="app">
+      <Background
+        colors={["#9BF267", "#C6FF8A", "#7AF2FF", "#4BC8FF", "#5570FF", "#A56BFF", "#FF76D6", "#FFB470"]}
+        rotation={30}
+        speed={0.3}
+        scale={1.2}
+        frequency={1.4}
+        warpStrength={1.2}
+        mouseInfluence={0.8}
+        parallax={0.6}
+        noise={0.08}
+        transparent
+      />
+
+      <div className="navigation">
+        <Navigation />
       </div>
+
       <div className="header-container">
-        <Searchbar value={searchQuery} onChange={setSearchQuery} />
-        <AddNoteButton onAddNote={addNote} />
-        <UploadNoteButton onUploadNote={uploadNote} />
-      </div>
-      <div className='notes-grid'>
+  <Searchbar value={searchQuery} onChange={setSearchQuery} />
+
+  {/* Right-side controls */}
+  <div className="header-actions">
+    <AddNoteButton onAddNote={addNote} />
+    <UploadNoteButton onUploadNote={uploadNote} />
+  </div>
+</div>
+
+
+      {error && (
+        <div className="main-error-banner">
+          {error}
+        </div>
+      )}
+
+      <div className="notes-grid">
         {filteredNotes.map((note) => (
-          <Note key={note.id} note={note} onRemoveNote={() => removeNote(note.id)} />
+          <Note
+            key={note.id}
+            note={note}
+            onRemoveNote={() => removeNote(note.id)}
+          />
         ))}
       </div>
     </div>

@@ -1,21 +1,21 @@
-
+// src/components/Searchbar.jsx
 import "./Searchbar.css";
-import React, { useState } from "react";
-import {FaSearch} from "react-icons/fa";
 
-function Searchbar({ value, onChange }) {
-    return(
-        <>
-            <div className="input-wrapper">
-                <FaSearch id="search-icon" />
-                <input className="search-input"
-                  placeholder="Search your mind"
-                  value={value}
-                  onChange={(e) => onChange(e.target.value)}
-                />
-            </div>
-        </>
-    );
+export default function Searchbar({ value, onChange }) {
+  return (
+    <div className="search-shell">
+      <div className="search-card">
+        <div className="search-icon-wrapper">
+          <span className="search-icon">⌕</span>
+        </div>
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Search your mind…"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </div>
+    </div>
+  );
 }
-
-export default Searchbar;

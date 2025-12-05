@@ -1,62 +1,110 @@
-  .note-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
-    box-shadow: var(--shadow-md);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    box-sizing: border-box;
-    position: relative;
-    width: 100%;
-    height: auto;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .note-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-  }
+/* Optional wrapper  */
+.note-card-with-tags {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
 
-  .note-card h1{
-    color: #000;
-    background-color: transparent;
-  }
+/* REAL card: white panel like the Spaces right-hand column */
+.note-card {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 22px 55px rgba(15, 23, 42, 0.08);
+  padding: 20px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
 
-  .note-card p{
-    color: #000;
-    background-color: transparent;
-  }
+.note-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 26px 65px rgba(15, 23, 42, 0.12);
+}
 
-  .note-header{
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  .note-header h1 {
-    margin: 0;
-    flex: 1;
-    font-size: 1.25rem;
-    line-height: 1.4;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    background-color: transparent;
-  }
-  
-  .note-text {
-    line-height: 1.6;
-    margin-top: 0.5rem;
-    background-color: transparent;
-    font-size: 1.2rem;
-  }
-  
-  .note-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e0e0e0;
-  }
+/* ---------- Header: title + X button ---------- */
+
+.note-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.note-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* Remove button (X) */
+.note-header button,
+.remove-note-button {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.note-header button:hover,
+.remove-note-button:hover {
+  background: rgba(15, 23, 42, 0.06);
+  color: #6b7280;
+}
+
+/* ---------- Body / text / link ---------- */
+
+.note-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #4b5563;
+  margin: 0;
+}
+
+.note-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: underline;
+  color: #2563eb;
+}
+
+.note-link.main-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ---------- Tags INSIDE the card ---------- */
+
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.note-tag,
+.note-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: lowercase;
+  background: #fff3df;
+  color: #c05621;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}

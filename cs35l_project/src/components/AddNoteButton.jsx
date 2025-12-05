@@ -1,63 +1,63 @@
-
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "./AddNoteButton.css";
 
-function AddNoteButton({ onAddNote }){
-    const [newNoteText, setNewNoteText] = useState("");
-    const [isEditorOpen, setIsEditorOpen] = useState(false);
-    const [addTitle, setAddTitle] = useState("");
+const API_BASE = "http://localhost:3000";
 
-    const handleTextChange = (event) => {
-        setNewNoteText(event.target.value);
-    };
-    const handleTitleChange = (event) => {
-      if (event.target.value.length >= 100) {
-          alert("Title is too long. Please enter a shorter title.");
-          return;
-      }
-        setAddTitle(event.target.value);
-    };
-    
-    const handleSave = () => {
-        if (newNoteText.trim() === '') {
-            alert("Note text cannot be empty");
-            return;
-        }
-        if (newNoteText.trim() !== '') {
-            onAddNote(addTitle, newNoteText); // call the function passed from app
-            setNewNoteText(''); // clear the input field
-            
-            setAddTitle(''); // clear the title input field
-            setIsEditorOpen(false);
-        }
-    };
+export default function AddNoteButton({ onNoteCreated }) {
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-    return(
-        <div className="addnote-wrapper">
-        {!isEditorOpen && (
-          <button className="addnote" onClick={() => setIsEditorOpen(true)}>
-            +
+  async function saveNote() {
+    if (!text.trim()) return setError("Note text cannot be empty");
+
+    setSaving(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ title, text }),
+      });
+
+      const data = await res.json();
+      onNoteCreated && onNoteCreated(data);
+
+      setTitle("");
+      setText("");
+      setOpen(false);
+    } catch {
+      setError("Failed to save note");
+    }
+    setSaving(false);
+  }
+
+  return (
+    <>
+      <button className="add-note-btn" onClick={() => setOpen(true)}>+</button>
+
+      {open && (
+        <div className="modal">
+          <input
+            placeholder="Title..."
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+          />
+          <textarea
+            placeholder="Write your note..."
+            value={text}
+            onChange={e => setText(e.target.value)}
+          />
+          {error && <p className="err">{error}</p>}
+
+          <button disabled={saving} onClick={saveNote}>
+            {saving ? "Saving..." : "Save"}
           </button>
-        )}
-
-        {isEditorOpen && (
-          <div className="note-editor">
-              <button className="cross-button" onClick={() => setIsEditorOpen(false)}>×</button>
-              <textarea className="note-title"
-                value={addTitle}
-                onChange={handleTitleChange}
-                placeholder="Add a title..."
-              />
-              <textarea className="note-content"
-                value={newNoteText}
-                onChange={handleTextChange}
-                placeholder="Add a new note..."
-              />
-              <button className="save-button" onClick={handleSave}>Save</button>
-            </div>
-        )}
-      </div>
-    );
+          <button onClick={() => setOpen(false)}>Cancel</button>
+        </div>
+      )}
+    </>
+  );
 }
-
-export default AddNoteButton;

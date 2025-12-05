@@ -1,43 +1,38 @@
-
 #!/usr/bin/env python3
 
-from google import genai
-import os
-import dotenv
-import sys
-import json
-# The client gets the API key from the environment variable `GEMINI_API_KEY`.
+from google.genai import Client
+import os, dotenv, sys, json
+
+# load .env
 dotenv.load_dotenv()
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
+if not GEMINI_API_KEY:
+    print(json.dumps({"error": "GEMINI_API_KEY is missing"}))
+    exit(1)
+
+client = Client(api_key=GEMINI_API_KEY)   # <-- NEW CORRECT FORMAT
+
 def generate_tags(title, text):
     try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
         response = client.models.generate_content(
-            model="gemini-2.5-flash", contents=f"Generate 3-5 relevant tags for this note: {title} {text}. Return only a comma-separated array of tags."
+            model="gemini-2.0-flash",  # stable + fast for tagging
+            contents=f"Generate 3-5 relevant topic tags for this note: {title}\n{text}. "
+                     f"Return ONLY a comma-separated list of tags, nothing else."
         )
-        
-        # Parse the response text into an array of tags
-        tags_text = response.text.strip()
-        tags = [tag.strip() for tag in tags_text.split(',') if tag.strip()]
-        
+
+        tags_raw = response.text.strip()
+        tags = [t.strip() for t in tags_raw.split(",") if t.strip()]
         return {"tags": tags}
+
     except Exception as e:
         return {"error": str(e)}
 
 if __name__ == "__main__":
-    # Read input from stdin (JSON format)
     try:
-        input_data = json.loads(sys.stdin.read())
-        title = input_data.get("title", "")
-        text = input_data.get("text", "")
-        
-        result = generate_tags(title, text)
+        data = json.loads(sys.stdin.read())
+        result = generate_tags(data.get("title",""), data.get("text",""))
         print(json.dumps(result))
-        
-    except json.JSONDecodeError:
-        print(json.dumps({"error": "Invalid JSON input"}))
-        sys.exit(1)
     except Exception as e:
         print(json.dumps({"error": str(e)}))
-        sys.exit(1)
+        exit(1)
