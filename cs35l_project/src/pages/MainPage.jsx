@@ -3,6 +3,7 @@ import { useState } from 'react'
 import './MainPage.css'
 import Searchbar from '../components/Searchbar'
 import AddNoteButton from "../components/AddNoteButton"
+import UploadNoteButton from "../components/UploadNoteButton"
 import Note from "../components/Note"
 import { useEffect } from "react";
 import Navigation from '../components/Navigation'
@@ -83,6 +84,45 @@ function MainPage() {
     }
   };
 
+  const uploadNote = async (file) => {
+    // try{
+    //   setLoading(true);
+    //   const response = await fetch(API_BASE_URL);
+      
+    //   if (!response.ok){
+    //     throw new Error('Failed to fetch notes');
+    //   }
+
+    //   const data = await response.json();
+    //   uploadNote(data);
+    //   setLoading(false);
+
+    // } catch (err) {
+    //   setError(err.message);
+    //   setLoading(false);
+    // }
+    const formData = new FormData();
+    formData.append("file", file);
+    try{
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      });
+
+      if (!response.ok){
+        throw new Error('Failed to upload note');
+      }
+
+      const newNote = await response.json();
+
+      setNotes([newNote, ...notes]);
+    } catch (err) {
+      console.error(err);
+      alert(`Failed to upload note, please try again`);
+    }
+  };
+
   const q = searchQuery.toLowerCase();
   const filteredNotes = q
     ? notes.filter(n =>
@@ -100,6 +140,7 @@ function MainPage() {
       <div className="header-container">
         <Searchbar value={searchQuery} onChange={setSearchQuery} />
         <AddNoteButton onAddNote={addNote} />
+        <UploadNoteButton onUploadNote={uploadNote} />
       </div>
       <div className='notes-grid'>
         {filteredNotes.map((note) => (
