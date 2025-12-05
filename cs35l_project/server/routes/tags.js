@@ -12,8 +12,15 @@ router.post("/", async (req, res) => {
             return res.status(400).json({ error: "Title or text is required" });
         }
         
-        // Path to the Python script
-        const pythonScriptPath = path.join(__dirname, '..', 'tags.py');
+        // Use stub for testing (Artillery load tests) to avoid API calls
+        // Set USE_TAG_STUB=true in server/.env to enable stub
+        const useStub = process.env.USE_TAG_STUB === 'true';
+        const scriptName = useStub ? 'tags-stub.py' : 'tags.py';
+        const pythonScriptPath = path.join(__dirname, '..', scriptName);
+        
+        if (useStub) {
+            console.log('[TEST MODE] Using tag stub - returning test double tags');
+        }
         
         // Prepare input data as JSON
         const inputData = JSON.stringify({ title: title || "", text: text || "" });
