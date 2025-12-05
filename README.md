@@ -321,8 +321,16 @@ If Playwright tests fail:
 - Artillery (load testing)
 
 **Diagrams:**
+
+**Sequence Diagram - Note Creation Flow:**
 ![SequenceDiagramReadMe](https://github.com/user-attachments/assets/723e4bab-c67f-444a-8600-67c2ddbaf6c8)
+
+This sequence diagram illustrates the complete flow of adding a new note to the application, from user interaction to database persistence and tag generation. The diagram shows the chronological sequence of interactions between the user, React components (AddNoteButton and MainPage), Express.js backend server, authentication middleware (requireAuth), database operations, and the tag generation process. Key steps include: user clicking save, component handlers calling API endpoints, JWT token verification through the requireAuth middleware (with error handling for invalid tokens), database insertion to create the note, asynchronous tag generation via a separate process, updating the note with generated tags, and finally displaying the new note to the user. The diagram highlights the authentication flow, error handling paths, and the asynchronous nature of tag generation that occurs after initial note creation.
+
+**State Diagram - Reminder Feature Lifecycle:**
 <img width="2318" height="1440" alt="image" src="https://github.com/user-attachments/assets/0e8d42c0-b13e-4e06-8cee-526f4c61775b" />
+
+This state diagram models the lifecycle of reminders in the calendar feature, showing all possible states a reminder can be in and the transitions between them. The diagram defines four main states: "No reminder" (initial state), "Reminder Active" (when done = false), "Reminder Done" (when done = true), and "Reminder Deleted" (terminal state). Each transition is labeled with the user action and corresponding API endpoint: creating a reminder via POST /api/calendar, loading existing reminders via GET /api/calendar, toggling completion status via PATCH/toggle, and deleting reminders via DELETE /api/calendar/:id. The diagram demonstrates the bidirectional nature of the done/not-done toggle, allowing users to mark reminders as complete and then unmark them if needed, while also showing the one-way transition to the deleted state.
 
 ## License
 
