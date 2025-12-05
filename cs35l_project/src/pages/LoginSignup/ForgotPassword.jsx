@@ -36,40 +36,28 @@ function ForgotPassword() {
             <h1>Verify Identity</h1>
             {error && <div className="error">{error}</div>}
             <form onSubmit={handleSubmit}>
-            <label><h3>Email:</h3></label>
-            <input
-                type="email"
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}
-            />
-            <label><h3>Age:</h3></label>
-            <input
-                type="text"
-                value={age}
-                onChange={(e)=>setAge(e.target.value)}
-            />
-            <label><h3>Favorite Professor:</h3></label>
-            <input
-                type="text"
-                value={favProf}
-                onChange={(e)=>setFavProf(e.target.value)}
-            />
+                <div className="authBody">
+                    <label><h3>Email:</h3></label>
+                    <input type="email" placeholder="Enter your email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+                    
+                    <label><h3>Age:</h3></label>
+                    <input type="text" placeholder="Enter your age" value={age} onChange={(e)=>setAge(e.target.value)} />
+                    
+                    <label><h3>Favorite Professor:</h3></label>
+                    <input type="text" placeholder="Enter your favorite professor" value={favProf} onChange={(e)=>setFavProf(e.target.value)} />
+                </div>
                 <div className="forgot-btns">
-                <button type="submit" className="forgotPrimary" disabled={loading}>
-                    {loading ? "Verifying..." : "Continue"}
-                </button>
-                <button
-                    type="button"
-                    className="forgotSecondary"
-                    onClick={() => navigate("/")}
-                >
-                    Back to Login
-                </button>
+                    <button type="submit" className="forgotPrimary" disabled={loading}>
+                        {loading ? "Verifying..." : "Continue"}
+                    </button>
+                    <button type="button" className="forgotSecondary" onClick={() => navigate("/")}>
+                        Back to Login
+                    </button>
                 </div>
             </form>
         </div>
         </div>
     );
-    }
+}
 
-    export default ForgotPassword;
+export default ForgotPassword;

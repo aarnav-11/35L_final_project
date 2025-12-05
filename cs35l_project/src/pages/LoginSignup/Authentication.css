@@ -130,3 +130,10 @@ h1{
     transform: translateY(-2px);
     box-shadow: 0 6px 18px grey;
 }
+
+/* .authBody2 input {
+    border: solid black 1px;
+    background-color: white;
+    padding: 1%;
+    width: 300px;
+} */
