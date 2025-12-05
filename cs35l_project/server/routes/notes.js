@@ -1,7 +1,18 @@
 
+const multer = require("multer");
+const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_KEY
+);
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
+const fetch = require('node-fetch');
+
+const API_BASE_URL = "http://localhost:3000/notes";
 const { requireAuth } = require('../middleware/auth');
 
 //get method to get all notes
@@ -142,6 +153,127 @@ router.post('/', requireAuth, async (req, res) => {
         })();
     });
 });
+
+// method to upload notes
+router.post("/upload", requireAuth, upload.single("file"), async (req, res) => {
+    try{
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+    const title = req.file.originalname;
+    const fileName = `${Date.now()}-${req.file.originalname.replace(/[^a-zA-Z0-9_\-\.]/g, "_")}`;
+    const {error} = await supabase.storage
+      .from("notes-files")
+      .upload(fileName, req.file.buffer, {
+        contentType: req.file.mimetype,
+        //contentType: "application/pdf",
+      });
+    if (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Upload failed" });
+    }
+    const { data, error: urlError } = supabase.storage
+    .from("notes-files")
+    .getPublicUrl(fileName);
+    if (urlError) { 
+        console.error(urlError);
+        return res.status(500).json({ error: "Failed to get public URL" });
+    }
+    const text = data.publicUrl;
+    const userid = req.user.userId;
+    const query = 'INSERT INTO notes (user_id, title, text) VALUES (?, ?, ?)';
+    db.run(query, [userid, title, text], function (err) {
+        if (err) {
+            console.error("SQLite insert error:", err);
+            return res.status(500).json({ error: err.message });
+        }
+    
+        const noteId = this.lastID;
+        (async () => {
+            try {
+                const pythonScriptPath = path.join(__dirname, '..', 'tags.py');
+                const inputData = JSON.stringify({
+                    title: title,
+                    text: title
+                });
+                const pythonProcess = spawn('python3', [pythonScriptPath]);
+                let stdout = "";
+                let stderr = "";
+                pythonProcess.stdout.on("data", data => stdout += data.toString());
+                pythonProcess.stderr.on("data", data => stderr += data.toString());
+                pythonProcess.stdin.write(inputData);
+                pythonProcess.stdin.end();
+                await new Promise((resolve, reject) => {
+                    pythonProcess.on("close", code => {
+                        code !== 0 ? reject(stderr) : resolve();
+                    });
+                });
+                let tagsArray = [];
+                try {
+                    const result = JSON.parse(stdout);
+                    if (result.tags) tagsArray = result.tags;
+                } catch (e) {
+                    console.error("Tag parse error:", e);
+                }
+                const tagsJson = JSON.stringify(tagsArray);
+                const updateQuery =
+                    "UPDATE notes SET tags = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+                db.run(updateQuery, [tagsJson, noteId]);
+                return res.status(201).json({
+                    id: noteId,
+                    title,
+                    text,
+                    tags: tagsArray,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+            } catch (tagErr) {
+                console.error("PDF tag generation failed:", tagErr);
+                return res.status(201).json({
+                    id: noteId,
+                    title,
+                    text,
+                    tags: [],
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                });
+            }
+        })();
+    });
+    
+    } catch (err) {
+        console.error("Upload route error:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+//method to open pdfs in browser
+router.get('/file/:filename', async (req, res) => {
+    try{
+        const { filename } = req.params;
+        const { data, error } = await supabase
+            .storage
+            .from('notes-files') 
+            .download(filename);
+        if (error || !data) {
+            console.error(error);
+            return res.status(404).send('File not found');
+        }
+        const mimeType = data.type || 'application/octet-stream';
+        res.setHeader('Content-Type', mimeType);
+        const inlineTypes = [
+            'application/pdf',
+            'image/png',
+            'image/jpeg',
+            'text/plain',
+            'text/html'
+          ];
+        const disposition = inlineTypes.includes(mimeType) ? 'inline' : 'attachment';
+        res.setHeader('Content-Disposition', `${disposition}; filename="${filename}"`);
+        data.body.pipe(res);
+    }catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+  });
 
 //method to delete notes
 router.delete("/:id", requireAuth, (req, res) => {
