@@ -55,7 +55,7 @@ cs35l_project/
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/aarnav-11/35L_final_project
 cd cs35l_project
 ```
 
