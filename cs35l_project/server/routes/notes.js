@@ -66,8 +66,16 @@ router.post('/', requireAuth, async (req, res) => {
         // Generate tags using Python script, then update the note with the tags
         (async () => {
             try {
-                // Prepare Python call
-                const pythonScriptPath = path.join(__dirname, '..', 'tags.py');
+                // Use stub for testing (Artillery load tests) to avoid API calls
+                // Set USE_TAG_STUB=true in server/.env to enable stub
+                const useStub = process.env.USE_TAG_STUB === 'true';
+                const scriptName = useStub ? 'tags-stub.py' : 'tags.py';
+                const pythonScriptPath = path.join(__dirname, '..', scriptName);
+                
+                if (useStub) {
+                    console.log('[TEST MODE] Using tag stub - returning test double tags');
+                }
+                
                 const inputData = JSON.stringify({ title: title || "", text: text });
                 const pythonProcess = spawn('python3', [pythonScriptPath]);
 
@@ -186,15 +194,24 @@ router.post("/upload", requireAuth, upload.single("file"), async (req, res) => {
             return res.status(500).json({ error: err.message });
         }
     
-        const noteId = this.lastID;
-        (async () => {
-            try {
-                const pythonScriptPath = path.join(__dirname, '..', 'tags.py');
-                const inputData = JSON.stringify({
-                    title: title,
-                    text: title
-                });
-                const pythonProcess = spawn('python3', [pythonScriptPath]);
+         const noteId = this.lastID;
+         (async () => {
+             try {
+                 // Use stub for testing (Artillery load tests) to avoid API calls
+                 // Set USE_TAG_STUB=true in server/.env to enable stub
+                 const useStub = process.env.USE_TAG_STUB === 'true';
+                 const scriptName = useStub ? 'tags-stub.py' : 'tags.py';
+                 const pythonScriptPath = path.join(__dirname, '..', scriptName);
+                 
+                 if (useStub) {
+                     console.log('[TEST MODE] Using tag stub - returning test double tags');
+                 }
+                 
+                 const inputData = JSON.stringify({
+                     title: title,
+                     text: title
+                 });
+                 const pythonProcess = spawn('python3', [pythonScriptPath]);
                 let stdout = "";
                 let stderr = "";
                 pythonProcess.stdout.on("data", data => stdout += data.toString());
