@@ -97,3 +97,43 @@ h1{
     padding: 2%;
     width: 300px;
 } */
+
+.forgot-btns {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.forgotPrimary,
+.forgotSecondary {
+    background: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 150px; 
+    height: 40px;
+    box-shadow: 0 4px 12px grey;
+    text-align: center;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+.forgotPrimary:hover,
+.forgotSecondary:hover {
+    background: whitesmoke;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px grey;
+}
+
+/* .authBody2 input {
+    border: solid black 1px;
+    background-color: white;
+    padding: 1%;
+    width: 300px;
+} */
