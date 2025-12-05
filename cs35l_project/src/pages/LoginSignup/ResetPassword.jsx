@@ -33,12 +33,21 @@ function ResetPassword() {
         <h1>Reset Password</h1>
         {error && <div className="error">{error}</div>}
         {message && <div className="success">{message}</div>}
-        <form onSubmit={handleSubmit}>
-          <label><h3>New Password:</h3></label>
-          <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} />
-          <button type="submit" className="signButton">
-            Reset Password
-        </button>
+        <form onSubmit={handleSubmit} className="forgotForm">
+            <label><h3>Email:</h3></label>
+            <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+            <label><h3>Age:</h3></label>
+            <input type="text" value={age} onChange={(e)=>setAge(e.target.value)} />
+            <label><h3>Favorite Professor:</h3></label>
+            <input type="text" value={favProf} onChange={(e)=>setFavProf(e.target.value)} />
+            <div className="resetButtons">
+                <button type="submit" className="signButton">
+                    Continue
+                </button>
+                <button type="button" className="signButton backButton" onClick={() => navigate("/")}>
+                    Back to Login
+                </button>
+            </div>
         </form>
       </div>
     </div>
