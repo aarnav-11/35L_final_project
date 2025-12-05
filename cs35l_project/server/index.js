@@ -9,13 +9,14 @@ const spacesRoutes = require("./routes/spaces");
 const tagsRouter = require('./routes/tags');
 const app = express();
 const cookieParser = require("cookie-parser");
+const calendarRoutes = require('./routes/calendar');
 
 //Middleware
 //enabling cookies and credentials
 app.use(cors({
     origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
@@ -37,6 +38,7 @@ app.use('/api/notes', notesRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/spaces", spacesRoutes);
 app.use('/api/tags', tagsRouter);
+app.use('/api/calendar', calendarRoutes);
 
 //Start the server
 const PORT = process.env.PORT || 3000;

@@ -51,6 +51,17 @@ function initializeDatabase() {
             FOREIGN KEY (user_id) REFERENCES users (id) on DELETE CASCADE
         )
     `;
+    const createRemindersTableQuery = `
+        CREATE TABLE IF NOT EXISTS reminders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            text TEXT NOT NULL,
+            done INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id) on DELETE CASCADE
+        )
+    `;
 
     db.run(createUsersTableQuery, (err) => {
         if (err) {
@@ -73,6 +84,14 @@ function initializeDatabase() {
             console.error("table didnt make", err.message);
         } else {
             console.log('notes table ready');
+        }
+    });
+
+    db.run(createRemindersTableQuery, (err) => {
+        if (err) {
+            console.error("table didnt make", err.message);
+        } else {
+            console.log('reminders table ready');
         }
     });
 }

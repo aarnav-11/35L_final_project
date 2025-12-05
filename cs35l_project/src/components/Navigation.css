@@ -22,6 +22,10 @@
     transform: translateY(-1px);
 }
 
+.calendar:hover{
+    transform: translateY(-1px);
+}
+
 .login:hover{
     transform: translateY(-1px);
 }
