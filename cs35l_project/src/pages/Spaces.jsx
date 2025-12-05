@@ -269,6 +269,15 @@ function Spaces() {
       )}
     </div>
   );
+    return (
+        <div className="spaces-container">
+            <Background />
+            <Navigation/>
+            <h1 className="title">Spaces</h1>
+            <hr></hr>
+            <Tag tagValue="Spaces" />
+        </div>
+    );
 }
 
 export default Spaces;

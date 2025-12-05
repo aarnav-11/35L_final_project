@@ -4,6 +4,7 @@ import "react-calendar/dist/Calendar.css";
 import "./Calendar.css";
 import ICAL from "ical.js";
 import Navigation from "../components/Navigation";
+import Background from "../components/Background";
 
 function CalendarPage() {
   const [date, setDate] = useState(new Date());
@@ -183,6 +184,7 @@ function CalendarPage() {
 
   return (
     <div className="calendar-page">
+      <Background />
       <Navigation />
       <h1 className="title">My Calendar</h1>
 
