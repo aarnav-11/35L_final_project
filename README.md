@@ -56,6 +56,7 @@ cs35l_project/
 
 ```bash
 git clone https://github.com/aarnav-11/35L_final_project
+cd 35L_final_project
 cd cs35l_project
 ```
 
@@ -100,7 +101,9 @@ JWT_REFRESH_EXPIRY=7d
 
 # Supabase Configuration (for file uploads)
 SUPABASE_URL=your-supabase-project-url
+SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_KEY=your-supabase-service-role-key
+SUPABASE_BUCKET=you-supabase-bucket
 
 # Google Gemini API (for AI tag suggestions)
 GEMINI_API_KEY=your-gemini-api-key
@@ -109,6 +112,10 @@ GEMINI_API_KEY=your-gemini-api-key
 USE_TAG_STUB=false   # set to true to return ["this","is","a","test","double"]
 ```
 To generate the Gemini API (this is free), go to https://aistudio.google.com/app/ and click Get API key on the botton left.
+
+To generate the Supabase API (also free), go to https://supabase.com/ and hit “Start your project” (in the top right corner) to create an account. Create a free account. (Sometimes the account confirmation email goes to spam, so if creating an account using email instead of GitHub, make sure to check your spam.) After creating an account, navigate to https://supabase.com/dashboard/organizations. Hit the green “Create new organization” in the top right corner. Name the organization and make it a personal type on a free plan. Then click “Create organization”. You will be promoted for a database password. Fill this out and hit “Create new project.” Scroll down on the project home and copy the project URL into SUPABASE_URL. Then on the left side of the screen click on the “project settings” tab. Under project settings click on “API keys.” On the API keys page click on “Legacy anon, service_role API keys,” and copy the anon key and service role key into the appropriate area of the .env file. Then, navigate to the storage tab on the left-hand-side of the screen. Under the buckets tab, hit “new bucket.” Title the bucket notes-files, and turn public bucket on but leave restrict file size and restrict MIME types off.  
+
+To generate the JWT secret key, type node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" into the terminal and enter the output in the appropriate space in the .env file.
 
 ### 5. Initialize the Database
 
@@ -120,7 +127,12 @@ The application consists of two parts that need to run simultaneously:
 
 **Terminal 1 - Backend Server:**
 ```bash
+cd cs35l_project
 cd server
+python3 -m venv venv
+source venv/bin/activate
+pip install google-genai
+pip install python-dotenv
 npm run devStart
 ```
 
@@ -128,6 +140,7 @@ The server will start on `http://localhost:3000`
 
 **Terminal 2 - Frontend Development Server:**
 ```bash
+cd cs35l_project
 npm run dev
 ```
 
