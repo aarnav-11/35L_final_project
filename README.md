@@ -141,6 +141,34 @@ Once both servers are running:
 2. You should see the login/signup page
 3. Create an account or log in to start using the application
 
+## Browser Extension Setup
+
+The project includes a Chrome extension that allows you to save web content directly to your notes.
+
+### Installing the Extension
+
+1. **Open Chrome Extensions Page:**
+   - Navigate to `chrome://extensions/` in your Chrome browser
+   - Or go to Menu → Extensions → Manage Extensions
+
+2. **Enable Developer Mode:**
+   - Toggle the "Developer mode" switch in the top-right corner of the extensions page
+
+3. **Load the Extension:**
+   - Click "Load unpacked" button
+   - Navigate to and select the `cs35l_project/chrome_extention/` directory
+   - The extension should now appear in your extensions list
+
+4. **Verify Installation:**
+   - You should see the "Mind App Chrome Extension" in your extensions list
+   - The extension icon should appear in your browser toolbar
+
+### Using the Extension
+
+- Click the extension icon in your browser toolbar to open the popup
+- The extension can interact with web pages and save content to your notes via the backend API
+- Make sure the backend server is running on `http://localhost:3000` for the extension to work
+
 ## Available Scripts
 
 ### Frontend Scripts (run from project root)
