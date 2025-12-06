@@ -191,7 +191,7 @@ npm run dev          # Start Vite development server
 npm run build        # Build for production
 npm run preview      # Preview production build
 npm run lint         # Run ESLint
-npm run test:e2e     # Run Playwright E2E tests
+npx playwright test tests/calender-workflow-e2e.spec.js     # Run Playwright E2E tests
 npm run test:load     # Run Artillery API load tests
 npm run test:load:browser  # Run Artillery + Playwright browser load tests
 ```
