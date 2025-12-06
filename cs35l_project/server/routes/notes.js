@@ -15,6 +15,12 @@ const fetch = require('node-fetch');
 const API_BASE_URL = "http://localhost:3000/notes";
 const { requireAuth } = require('../middleware/auth');
 
+// Only enable the Gemini stub when explicitly requested
+const isTagStubEnabled = () => {
+    const flag = String(process.env.USE_TAG_STUB || '').trim().toLowerCase();
+    return flag === 'true';
+};
+
 //get method to get all notes
 router.get('/', requireAuth ,(req, res) => {
     const userid = req.user.userId;
@@ -68,7 +74,7 @@ router.post('/', requireAuth, async (req, res) => {
             try {
                 // Use stub for testing (Artillery load tests) to avoid API calls
                 // Set USE_TAG_STUB=true in server/.env to enable stub
-                const useStub = process.env.USE_TAG_STUB === 'true';
+                const useStub = isTagStubEnabled();
                 const scriptName = useStub ? 'tags-stub.py' : 'tags.py';
                 const pythonScriptPath = path.join(__dirname, '..', scriptName);
                 
@@ -197,9 +203,9 @@ router.post("/upload", requireAuth, upload.single("file"), async (req, res) => {
          const noteId = this.lastID;
          (async () => {
              try {
-                 // Use stub for testing (Artillery load tests) to avoid API calls
-                 // Set USE_TAG_STUB=true in server/.env to enable stub
-                 const useStub = process.env.USE_TAG_STUB === 'true';
+                // Use stub for testing (Artillery load tests) to avoid API calls
+                // Set USE_TAG_STUB=true in server/.env to enable stub
+                const useStub = isTagStubEnabled();
                  const scriptName = useStub ? 'tags-stub.py' : 'tags.py';
                  const pythonScriptPath = path.join(__dirname, '..', scriptName);
                  

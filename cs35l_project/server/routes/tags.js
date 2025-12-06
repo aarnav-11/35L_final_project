@@ -4,6 +4,12 @@ const router = express.Router();
 const { spawn } = require('child_process');
 const path = require('path');
 
+// Only enable the Gemini stub when explicitly requested
+const isTagStubEnabled = () => {
+    const flag = String(process.env.USE_TAG_STUB || '').trim().toLowerCase();
+    return flag === 'true';
+};
+
 router.post("/", async (req, res) => {
     try {
         const { title, text } = req.body;
@@ -14,7 +20,7 @@ router.post("/", async (req, res) => {
         
         // Use stub for testing (Artillery load tests) to avoid API calls
         // Set USE_TAG_STUB=true in server/.env to enable stub
-        const useStub = process.env.USE_TAG_STUB === 'true';
+        const useStub = isTagStubEnabled();
         const scriptName = useStub ? 'tags-stub.py' : 'tags.py';
         const pythonScriptPath = path.join(__dirname, '..', scriptName);
         

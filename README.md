@@ -104,6 +104,9 @@ SUPABASE_SERVICE_KEY=your-supabase-service-role-key
 
 # Google Gemini API (for AI tag suggestions)
 GEMINI_API_KEY=your-gemini-api-key
+
+# Use the Gemini stub (no external API call) only for tests/load:
+USE_TAG_STUB=false   # set to true to return ["this","is","a","test","double"]
 ```
 To generate the Gemini API (this is free), go to https://aistudio.google.com/app/ and click Get API key on the botton left.
 
