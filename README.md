@@ -320,6 +320,10 @@ If Playwright tests fail:
 - Playwright (E2E testing)
 - Artillery (load testing)
 
+**Diagrams:**
+![SequenceDiagramReadMe](https://github.com/user-attachments/assets/723e4bab-c67f-444a-8600-67c2ddbaf6c8)
+<img width="2318" height="1440" alt="image" src="https://github.com/user-attachments/assets/0e8d42c0-b13e-4e06-8cee-526f4c61775b" />
+
 ## License
 
 [Your License Here]
